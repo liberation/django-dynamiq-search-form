@@ -2,13 +2,14 @@
 
 from django import forms
 from django.core.urlresolvers import reverse
-from django.contrib.admin import widgets
 from django.forms.widgets import MultiWidget, DateInput
 from django.utils.html import escape, conditional_escape
 from django.utils.text import force_unicode
 from django.utils.formats import get_format
 
 from ajax_select.fields import AutoCompleteWidget
+
+from .utils import model_to_app_and_classname
 
 
 class DynamiqAdvancedDynamicSelect(forms.Select):
@@ -79,18 +80,26 @@ class MultiAutocompleteWidget(MultiWidget):
         return [None, None]
 
 
-class IntegerSliderWithInput(widgets.AdminIntegerFieldWidget):
-    """
-    A simple input for integer, with some data attributes and a specific
-    class, to intercept it in JS and add a slider.
-    """
-    def __init__(self, min_value, max_value, steps=10, attrs=None):
-        final_attrs = {
-            'data-min': min_value,
-            'data-max': max_value,
-            'data-steps': steps,
-            'class': 'vIntegerField js-integer-slider',
-        }
-        if attrs is not None:
-            final_attrs.update(attrs)
-        super(IntegerSliderWithInput, self).__init__(attrs=final_attrs)
+class DynamiqModelSelect(forms.Select):
+
+    def __init__(self, *args, **kwargs):
+        self.admin_site_name = kwargs.pop('admin_site_name')
+        self.changelist_url_getter = kwargs.pop('changelist_url_getter')
+        super(DynamiqModelSelect, self).__init__(*args, **kwargs)
+
+    def build_attrs(self, attrs=None, **kwargs):
+        rval = super(DynamiqModelSelect, self).build_attrs(attrs, **kwargs)
+        rval.update({'class': 'js-update_form_action'})
+        return rval
+
+    def render_option(self, selected_choices, option_value, option_label):
+
+        option_value = force_unicode(option_value)
+        app_label, classname = model_to_app_and_classname(option_value)
+
+        selected_html = (option_value in selected_choices) and u' selected="selected"' or ''
+        data_action = ' data-actionurl="%s"' % (
+            self.changelist_url_getter.get_url(self.admin_site_name, app_label, classname), )
+        return u'<option value="%s"%s%s>%s</option>' % (
+            escape(option_value), selected_html, data_action,
+            conditional_escape(force_unicode(option_label)))

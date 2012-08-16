@@ -44,7 +44,7 @@ def render_dynamiq_advanced_formset(context,
     # If we are already in a search results page (i.e. we have a change list),
     # load form from ChangeList instance in context, otherwise instantiate
     # a brand new one.
-    formset = context.get('formset', context.get('form', None))
+    formset = context.get('dynamiq_formset', None)
     if not formset:
         user = context['request'].user
         formset_class = get_advanced_search_formset_class(
@@ -62,7 +62,7 @@ def render_dynamiq_advanced_formset(context,
 
 
 @register.filter
-def render_dynamiq_label(label, autoescape=None):
+def format_dynamiq_label(label, autoescape=None):
     if autoescape:
         escape = conditional_escape
     else:
@@ -82,4 +82,4 @@ def render_dynamiq_label(label, autoescape=None):
             # if item is not a dict, then it's an AND/OR operator
             formatted_label += u' <span class="label_operator">%s</span> ' % (escape(l),)
     return mark_safe(formatted_label)
-render_dynamiq_label.needs_autoescape = True
+format_dynamiq_label.needs_autoescape = True

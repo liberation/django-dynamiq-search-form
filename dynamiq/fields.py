@@ -5,7 +5,7 @@ import calendar
 from datetime import date
 
 from django import forms
-from django.forms.fields import MultiValueField, DateField, IntegerField
+from django.forms.fields import MultiValueField, DateField
 from django.core.exceptions import ValidationError
 
 from extended_choices import Choices
@@ -13,8 +13,7 @@ from extended_choices.fields import ExtendedChoiceField, ExtendedTypedChoiceFiel
 
 from ajax_select.fields import AutoCompleteField
 
-from .widgets import (BetweenDateWidget, MultiAutocompleteWidget,
-                          IntegerSliderWithInput)
+from .widgets import BetweenDateWidget, MultiAutocompleteWidget
 
 
 class DynamiqChoiceFieldMixin(ExtendedChoiceField):
@@ -160,19 +159,6 @@ class DynamiqAdvancedChoiceField(ExtendedChoiceField):
         self.widget.filter_type = filter_type
 
 
-class IntegerFieldWithSlider(IntegerField):
-    """
-    A simple integer field with a slider to select value.
-    """
-    def __init__(self, *args, **kwargs):
-        super(IntegerFieldWithSlider, self).__init__(*args, **kwargs)
-        self.widget = IntegerSliderWithInput(
-                min_value=self.min_value,
-                max_value=self.max_value,
-            )
-
-
-# This was introduced because of #636
 class PolymorphicDateField(DateField):
     """Accepts ``%i/%m/%Y``, ``%m/%Y`` and ``%Y``. Cleanned data
     contains a tuple of the kind of date and a datetime object

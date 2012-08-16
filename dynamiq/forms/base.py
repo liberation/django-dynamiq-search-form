@@ -39,28 +39,25 @@ class DynamiqOptionsMixin(object):
                        self.data,
                        auto_id=self.auto_id,
                        prefix=prefix,
-                       user=self.user
+                       main_form=self
                    )
         else:
             form = self.options_form_class(
                        auto_id=self.auto_id,
                        prefix=prefix,
                        initial=self.initial_options,
-                       user=self.user
+                       main_form=self
                    )
 
         return form
 
     def __init__(self, data=None, *args, **kwargs):
-        print data
         self.user = kwargs.pop('user', None)
         self.default_model = kwargs.pop('default_model', None)
         self.initial_options = None
         if data is None:
             # If no data is passed, i.e. form is not bound, force initial
             # data according to user's group
-            # WARNING: for this to work, data must *always* be passed in kwargs
-            # not in args, see additional check below
             # FIXME add test for that!
             kwargs['initial'], self.initial_options = self.get_initial_data()
         super(DynamiqOptionsMixin, self).__init__(data, *args, **kwargs)
@@ -99,7 +96,8 @@ class DynamiqSearchOptionsForm(forms.Form):
            )
 
     def __init__(self, *args, **kwargs):
-        self.user = kwargs.pop('user')
+        self.main_form = kwargs.pop('main_form')
+        self.user = self.main_form.user
 
         super(DynamiqSearchOptionsForm, self).__init__(*args, **kwargs)
 
@@ -111,7 +109,7 @@ class DynamiqAdvancedFormset(DynamiqOptionsMixin, BaseFormSet):
     pass
 
 
-class DynamiqAdvancedForm(forms.Form, DynamiqOptionsMixin):
+class DynamiqAdvancedForm(forms.Form):
     error_css_class = 'errors'
 
     # Lookup filters

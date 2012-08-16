@@ -6,6 +6,7 @@ from django.utils.dateformat import DateFormat
 from django.db.models import Q
 from django.forms.formsets import formset_factory
 from django.utils.functional import curry
+from django.core.urlresolvers import reverse
 from django.conf import settings
 
 
@@ -290,3 +291,41 @@ class FiltersBuilder(object):
         query_filter.is_negated = is_negated
 
         return query_filter
+
+
+class ChangeListUrlGetter(object):
+    """
+    This object return the url for the changelist of a specific model, given as
+    `classname`.
+    The method to be called is `get_url`, the `normalize_classname` is only here
+    for subclassing in case of specific needs
+    """
+    def normalize_classname(self, classname):
+        return classname.lower()
+
+    def get_url(self, admin_site_name, app_label, classname):
+        classname = self.normalize_classname(classname)
+        return reverse('admin:%s_%s_changelist' % (app_label, classname), current_app=admin_site_name)
+
+
+def model_choice_value(model):
+    """
+    In MODEL_CHOICES, we need to add the app_label AND the model name
+    """
+    return '%s:%s' % (model._meta.app_label, model._meta.object_name)
+
+
+def model_to_app_and_classname(choice):
+    """
+    It's the reverse of model_choice_value, to get the app_label and the
+    model name (i.e. the classname to be sent to search engine).
+    """
+    if not choice:
+        return (None, None)
+    if isinstance(choice, basestring):
+        classes = choice.split(',')
+    else:
+        classes = choice
+    app_label = classes[0].split(':')[0]
+    classname = ','.join([c.split(':')[1] for c in classes])
+    return app_label, classname
