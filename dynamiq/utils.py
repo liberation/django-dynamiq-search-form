@@ -18,8 +18,6 @@ def get_advanced_search_formset_class(user, formset_base_class, form_class):
     formet_class.form is curried in order to pass kwargs `user` to each
     individual form of the formset.
 
-    NB: this util can't live in utils.py, it will raise an circular import.
-
     From http://stackoverflow.com/questions/622982/django-passing-custom-form-parameters-to-formset/624013#624013.
     """
     formset_class = formset_factory(
