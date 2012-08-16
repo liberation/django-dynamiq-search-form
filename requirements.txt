@@ -1,0 +1,2 @@
+git+git://github.com/liberation/django-ajax-selects.git
+git+git://github.com/liberation/django-extended-choices.git

@@ -1,0 +1,71 @@
+
+<div class="advanced_search" id="dynamiq_advanced_search">
+    <h1>Recherche avancée</h1>
+    {% if search_advanced_formset.is_bound and not search_advanced_formset.is_valid %}
+    <div class="errornote">
+        {{ search_advanced_formset.is_bound }}
+        {{ search_advanced_formset.is_valid }}
+        <p>Le formulaire n'est pas valide, merci de corriger les erreurs suivantes sur les critères encadrés de rouge:</p>
+        {% for form_errors in search_advanced_formset.errors %}
+            {% for field, error in form_errors.items %}
+                {{ error }}
+            {% endfor %}
+        {% endfor %}
+        <hr />
+    </div>
+    {% endif %}
+    <form autocomplete="off" action="{# Will be filled by JS #}" method="get" class="advanced_search_form search_form">
+        {{ search_advanced_formset.management_form }}
+        {# Hidden fields expected by Django's changelist popup #}
+        {% if request.GET.t %}
+        <input type="hidden" name="t" value="{{ request.GET.t }}" />
+        {% endif %}
+        {% if request.GET.pop %}
+        <input type="hidden" name="pop" value="{{ request.GET.pop }}" />
+        {% endif %}        
+
+        <h3>Types d'objets</h3>
+        <div class="advanced_search_module">
+        {{ search_advanced_formset.options_form.model }}
+        </div>
+
+        <div>
+            <h3>Filtres</h3>
+            <div class="advanced_search_module">
+                {% for form in search_advanced_formset %}
+                <ul id="form-{{ forloop.counter0 }}" class="query_fragment{% if form.non_field_errors %} {{ form.error_css_class }}{% endif %}">
+                    {% for field in form %}
+                        <li class="{{ field.css_classes }}">{{ field }}</li>
+                    {% endfor %}
+                </ul>
+                {% if forloop.last %}
+                    <ul id="form-empty">{# don't set query_fragment class on this ul, it will be done dynamically when cloning is done #}
+                    {% for field in search_advanced_formset.empty_form %}
+                        <li>{{ field }}</li>
+                    {% endfor %}
+                    </ul>
+                {% endif %}
+                {% endfor %}
+            </div>
+            <div id="filters_builders">
+                <span>Préremplir:</span>
+                {% for builder_label, builder_data in js_filters_builders %}
+                    <a href="#" data-filterbuilder="{{ builder_data }}">{{ builder_label }}</a>{% if not forloop.last %},{% endif %}
+                {% endfor %}
+            </div>
+        </div>
+        <h3>Options <a href="#" id="more_search_options_advanced">afficher</a></h3>
+        <ul class="search_options advanced_search_module" id="advanced_search_options" style="display: none;">
+            {% for field in search_advanced_formset.options_form %}
+            {# if not forloop.first <= was made to prevent from redisplaying model #}
+                <li>{{ field.label_tag }}: {{ field }}</li>
+            {# endif #}
+        {% endfor %}
+            <li> <a href="#" class="js-simple_search">J'en ai marre de la recherche avancée, je veux la simple!</a> </li>
+        </ul>
+        <input type="hidden" name="search_mode" value="advanced" />
+        <div>
+            <input type="submit" value="OK" />
+        </div>
+    </form>
+</div>
