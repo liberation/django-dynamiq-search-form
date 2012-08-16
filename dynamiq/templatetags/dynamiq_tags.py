@@ -4,62 +4,39 @@ from django.utils.html import conditional_escape
 from django.utils.safestring import mark_safe
 from django import template
 
-from dynamiq.utils import get_advanced_search_formset_class
-
 register = template.Library()
 
 
-def render_dynamiq_form(context, form_class):
-    """
-    A method to be used within an inclusion tag that render a search form.
-    Should be called with a context and a search_form class inherited from
-    DynamiqSearchForm.
-    """
-    # If we are already in a search results page (i.e. we have a change list),
-    # load form from ChangeList instance in context, otherwise instantiate
-    # a brand new one.
-    cl = context.get('cl', None)
-    if cl and hasattr(cl, 'search_form'):
-        form = cl.search_form
-    else:
-        form = form_class(user=context['request'].user,
-                          admin_site_name=context.current_app,
-                          prefix=form_class.PREFIX)
+# ############ #
+#     Tags     #
+# ############ #
 
+@register.inclusion_tag('dynamiq/simple_form.html')
+def render_dynamiq_form(request, form):
+    """
+    Render a form.
+    """
     return {
         'search_form': form,
-        'request': context['request'],
+        'request': request
     }
 
 
-def render_dynamiq_advanced_formset(context,
-                                    formset_base_class,
-                                    form_class):
+@register.inclusion_tag('dynamiq/advanced_formset.html')
+def render_dynamiq_advanced_formset(request, formset):
     """
-    A method to be used within an inclusion tag that render an advanced
-    search formset.
-    Should be called with a context and a search_form class inherited from
-    DynamiqSearchForm.
+    Render a formset.
     """
-    # If we are already in a search results page (i.e. we have a change list),
-    # load form from ChangeList instance in context, otherwise instantiate
-    # a brand new one.
-    formset = context.get('dynamiq_formset', None)
-    if not formset:
-        user = context['request'].user
-        formset_class = get_advanced_search_formset_class(
-                            user,
-                            formset_base_class,
-                            form_class
-                        )
-        formset = formset_class(user=user)
-
     return {
         'search_advanced_formset': formset,
-        'request': context['request'],
-        'js_filters_builders': [(label, simplejson.dumps(data)) for label, data in form_class.JS_FILTERS_BUILDERS]
+        'request': request,
+        'js_filters_builders': [(label, simplejson.dumps(data)) for label, data in formset.form().JS_FILTERS_BUILDERS]
     }
 
+
+# ############ #
+#   Filters    #
+# ############ #
 
 @register.filter
 def format_dynamiq_label(label, autoescape=None):
