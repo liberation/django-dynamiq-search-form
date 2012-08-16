@@ -80,15 +80,18 @@ class MultiAutocompleteWidget(MultiWidget):
         return [None, None]
 
 
-class DynamiqModelSelect(forms.Select):
+class DynamiqAdminModelSelect(forms.Select):
+    """
+    Render a Model select that take care of the changelist URL.
+    """
 
     def __init__(self, *args, **kwargs):
         self.admin_site_name = kwargs.pop('admin_site_name')
         self.changelist_url_getter = kwargs.pop('changelist_url_getter')
-        super(DynamiqModelSelect, self).__init__(*args, **kwargs)
+        super(DynamiqAdminModelSelect, self).__init__(*args, **kwargs)
 
     def build_attrs(self, attrs=None, **kwargs):
-        rval = super(DynamiqModelSelect, self).build_attrs(attrs, **kwargs)
+        rval = super(DynamiqAdminModelSelect, self).build_attrs(attrs, **kwargs)
         rval.update({'class': 'js-update_form_action'})
         return rval
 
