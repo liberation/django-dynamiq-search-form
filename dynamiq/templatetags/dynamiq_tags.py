@@ -4,6 +4,8 @@ from django.utils.html import conditional_escape
 from django.utils.safestring import mark_safe
 from django import template
 
+from dynamiq.utils import LabelModel
+
 register = template.Library()
 
 
@@ -44,8 +46,11 @@ def format_dynamiq_label(label, autoescape=None):
         escape = conditional_escape
     else:
         escape = lambda x: x
-    # formatted_label = u'<span class="label_classname">%s</span> vérifiant ' % escape(label[0])
-    formatted_label = ""
+    if label and isinstance(label[0], LabelModel):
+        # We have here a model label
+        formatted_label = u'<span class="label_classname">%s</span> vérifiant ' % escape(label[0])
+    else:
+        formatted_label = ""
     for l in label:
         if isinstance(l, dict):
             # Assemble query fragment, escaping all dict values first
@@ -55,6 +60,9 @@ def format_dynamiq_label(label, autoescape=None):
                                "<span class=\"label_lookup\">%(lookup)s</span> " \
                                "<span class=\"label_value\">%(value)s</span>" \
                                "</span>" % l
+        elif isinstance(l, LabelModel):
+            # LabelModel are printed at the beginning
+            continue
         else:
             # if item is not a dict, then it's an AND/OR operator
             formatted_label += u' <span class="label_operator">%s</span> ' % (escape(l),)
