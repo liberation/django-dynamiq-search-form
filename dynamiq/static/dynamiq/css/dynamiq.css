@@ -46,7 +46,7 @@ a.add-form {
     width: 10px;
     height: 10px;
     margin-left: 3px;
-    background: url(../../admin/img/admin/icon_addlink.gif) no-repeat left center;
+    background: url(../../admin/img/icon_addlink.gif) no-repeat left center;
     display: none; /* we don't want the button for now. we might want it in the future, so let's just hide it */
 }
 
@@ -55,7 +55,7 @@ a.delete-form {
     width: 10px;
     height: 10px;
     margin-left: 3px;
-    background: url(../../admin/img/admin/icon_deletelink.gif) no-repeat left center;
+    background: url(../../admin/img/icon_deletelink.gif) no-repeat left center;
 }
 
 .actions button {
