@@ -1,11 +1,10 @@
+{% load i18n %}
 
 <div class="advanced_search" id="dynamiq_advanced_search">
-    <h1>Recherche avancée</h1>
+    <h1>{% trans "Advanced search" %}</h1>
     {% if search_advanced_formset.is_bound and not search_advanced_formset.is_valid %}
     <div class="errornote">
-        {{ search_advanced_formset.is_bound }}
-        {{ search_advanced_formset.is_valid }}
-        <p>Le formulaire n'est pas valide, merci de corriger les erreurs suivantes sur les critères encadrés de rouge:</p>
+        <p>{% trans "Form is not valid. Please correct the errors below:" %}</p>
         {% for form_errors in search_advanced_formset.errors %}
             {% for field, error in form_errors.items %}
                 {{ error }}
@@ -24,13 +23,15 @@
         <input type="hidden" name="pop" value="{{ request.GET.pop }}" />
         {% endif %}        
 
-        <h3>Types d'objets</h3>
-        <div class="advanced_search_module">
-        {{ search_advanced_formset.options_form.model }}
-        </div>
+        {% if search_advanced_formset.options_form.model %}
+            <h3>{% trans "Model" %}</h3>
+            <div class="advanced_search_module">
+            {{ search_advanced_formset.options_form.model }}
+            </div>
+        {% endif %}
 
         <div>
-            <h3>Filtres</h3>
+            <h3>{% trans "Filters" %}</h3>
             <div class="advanced_search_module">
                 {% for form in search_advanced_formset %}
                 <ul id="form-{{ forloop.counter0 }}" class="query_fragment{% if form.non_field_errors %} {{ form.error_css_class }}{% endif %}">
@@ -47,21 +48,24 @@
                 {% endif %}
                 {% endfor %}
             </div>
+            {% if js_filters_builders %}
             <div id="filters_builders">
-                <span>Préremplir:</span>
+                <span>{% trans "Prefill:" %}</span>
                 {% for builder_label, builder_data in js_filters_builders %}
                     <a href="#" data-filterbuilder="{{ builder_data }}">{{ builder_label }}</a>{% if not forloop.last %},{% endif %}
                 {% endfor %}
             </div>
+            {% endif %}
         </div>
-        <h3>Options <a href="#" id="more_search_options_advanced">afficher</a></h3>
+        <h3>{% trans "Options" %} <a href="#" id="more_search_options_advanced">{% trans "show" %}</a></h3>
         <ul class="search_options advanced_search_module" id="advanced_search_options" style="display: none;">
             {% for field in search_advanced_formset.options_form %}
-            {# if not forloop.first <= was made to prevent from redisplaying model #}
+            {% if field.name != "model" %}
+                {# We already include "model" field in first place of the form, for user's convenience #}
                 <li>{{ field.label_tag }}: {{ field }}</li>
-            {# endif #}
+            {% endif %}
         {% endfor %}
-            <li> <a href="#" class="js-simple_search">J'en ai marre de la recherche avancée, je veux la simple!</a> </li>
+            <li> <a href="#" class="js-simple_search">{% trans "Give me the simple search form!" %}</a> </li>
         </ul>
         <input type="hidden" name="search_mode" value="advanced" />
         <div>
