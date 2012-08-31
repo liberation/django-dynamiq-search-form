@@ -15,7 +15,8 @@ from dynamiq.widgets import DynamiqAdvancedDynamicSelect
 from .constants import (FILTER_LOOKUPS_STR, FILTER_LOOKUPS_INT,
                         FILTER_LOOKUPS_DATE, FILTER_LOOKUPS,
                         FILTER_RIGHT_OP, FILTER_DATE_RELATIVE,
-                        LOOKUP_NEGATIVE_PREFIX, YES_NO)
+                        LOOKUP_NEGATIVE_PREFIX, YES_NO,
+                        FILTER_LOOKUPS_YES_NO)
 
 
 class DynamiqOptionsMixin(object):
@@ -116,6 +117,7 @@ class DynamiqAdvancedForm(forms.Form):
     FILTER_LOOKUPS_FULLTEXT = ()  # Defined by SeSQL or Haystack
     FILTER_LOOKUPS_STR = FILTER_LOOKUPS_STR
     FILTER_LOOKUPS_INT = FILTER_LOOKUPS_INT
+    FILTER_LOOKUPS_YES_NO = FILTER_LOOKUPS_YES_NO
     FILTER_LOOKUPS_DATE = FILTER_LOOKUPS_DATE
     FILTER_LOOKUPS = FILTER_LOOKUPS
     FILTER_RIGHT_OP = FILTER_RIGHT_OP
@@ -186,6 +188,11 @@ class DynamiqAdvancedForm(forms.Form):
     int_lookup = ExtendedChoiceField(
         required=False,
         extended_choices=FILTER_LOOKUPS_INT,
+        widget=forms.Select(attrs={'class': 'filter_lookup'})
+    )
+    yes_no_lookup = ExtendedChoiceField(
+        required=False,
+        extended_choices=FILTER_LOOKUPS_YES_NO,
         widget=forms.Select(attrs={'class': 'filter_lookup'})
     )
     date_lookup = DynamiqAdvancedChoiceField(

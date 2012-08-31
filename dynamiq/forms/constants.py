@@ -20,6 +20,11 @@ FILTER_LOOKUPS_STR = Choices(
     ('NOT_EXACT', LOOKUP_NEGATIVE_PREFIX + 'exact', 'n\'est pas'),
 )
 
+FILTER_LOOKUPS_YES_NO = Choices(
+    ('EXACT', 'exact', 'est'),
+    ('NOT_EXACT', LOOKUP_NEGATIVE_PREFIX + 'exact', 'n\'est pas'),
+)
+
 FILTER_LOOKUPS_INT = Choices(
     ('EXACT', 'exact', 'est'),
     ('NOT_EXACT', LOOKUP_NEGATIVE_PREFIX + 'exact', 'n\'est pas'),
@@ -58,4 +63,5 @@ FILTER_LOOKUPS = {
     'str': FILTER_LOOKUPS_STR,
     'int': FILTER_LOOKUPS_INT,
     'date': FILTER_LOOKUPS_DATE,
+    'yes_no': FILTER_LOOKUPS_YES_NO,
 }
