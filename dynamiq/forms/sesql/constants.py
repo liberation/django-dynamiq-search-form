@@ -2,8 +2,8 @@
 
 from extended_choices import Choices
 
-from ..constants import (LOOKUP_NEGATIVE_PREFIX, FILTER_LOOKUPS_STR,
-                        FILTER_LOOKUPS_INT, FILTER_LOOKUPS_DATE)
+from ..constants import LOOKUP_NEGATIVE_PREFIX
+from ..constants import FILTER_LOOKUPS as DEFAULT_FILTER_LOOKUPS
 
 
 QUERY_PLAN = Choices(
@@ -17,9 +17,6 @@ FILTER_LOOKUPS_FULLTEXT = Choices(
     ('NOT_CONTAINS', LOOKUP_NEGATIVE_PREFIX + 'containswords', 'ne contient pas')
 )
 
-FILTER_LOOKUPS = {
+FILTER_LOOKUPS = DEFAULT_FILTER_LOOKUPS.update({
     'fulltext': FILTER_LOOKUPS_FULLTEXT,
-    'str': FILTER_LOOKUPS_STR,
-    'int': FILTER_LOOKUPS_INT,
-    'date': FILTER_LOOKUPS_DATE,
-}
+})
