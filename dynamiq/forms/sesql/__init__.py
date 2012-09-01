@@ -7,7 +7,8 @@ from dynamiq.forms.base import DynamiqAdvancedForm, DynamiqSearchOptionsForm
 from dynamiq.fields import CommaSeparatedChoiceField, DynamiqIntChoiceField
 from dynamiq.forms.constants import YES_NO
 
-from .constants import QUERY_PLAN, FILTER_LOOKUPS_FULLTEXT, FILTER_LOOKUPS
+from .constants import (QUERY_PLAN, FILTER_LOOKUPS_FULLTEXT, FILTER_LOOKUPS,
+                        FILTER_LOOKUPS_ALIASES)
 
 
 class SeSQLOptionsForm(DynamiqSearchOptionsForm):
@@ -34,6 +35,7 @@ class SeSQLForm(DynamiqAdvancedForm):
     # Redefine it at class level
     FILTER_LOOKUPS_FULLTEXT = FILTER_LOOKUPS_FULLTEXT
     FILTER_LOOKUPS = FILTER_LOOKUPS
+    FILTER_LOOKUPS_ALIASES = FILTER_LOOKUPS_ALIASES
 
     # SeSQL doesn't handle boolean fields, it saves them as 1 or 0.
     filter_value_yes_no = DynamiqIntChoiceField(YES_NO)

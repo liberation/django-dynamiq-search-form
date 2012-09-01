@@ -2,7 +2,7 @@
 
 
 from dynamiq.forms.base import DynamiqAdvancedForm
-from .constants import (FILTER_LOOKUPS_FULLTEXT, FILTER_LOOKUPS)
+from .constants import (FILTER_LOOKUPS_FULLTEXT, FILTER_LOOKUPS, FILTER_LOOKUPS_ALIASES)
 
 
 class HaystackForm(DynamiqAdvancedForm):
@@ -10,6 +10,7 @@ class HaystackForm(DynamiqAdvancedForm):
     # Redefine it class level
     FILTER_LOOKUPS_FULLTEXT = FILTER_LOOKUPS_FULLTEXT
     FILTER_LOOKUPS = FILTER_LOOKUPS
+    FILTER_LOOKUPS_ALIASES = FILTER_LOOKUPS_ALIASES
 
     def __init__(self, *args, **kwargs):
         super(HaystackForm, self).__init__(*args, **kwargs)

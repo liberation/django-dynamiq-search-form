@@ -65,3 +65,20 @@ FILTER_LOOKUPS = {
     'date': FILTER_LOOKUPS_DATE,
     'yes_no': FILTER_LOOKUPS_YES_NO,
 }
+
+# Put generic ones at first level,
+# and type specific in type key
+FILTER_LOOKUPS_ALIASES = {
+    "=": 'exact',
+    ':': 'exact',
+    "!=": LOOKUP_NEGATIVE_PREFIX + 'exact',
+    '!:': LOOKUP_NEGATIVE_PREFIX + 'exact',
+    '>=': 'gte',
+    '<=': 'lte',
+    'fulltext': {
+        "=": 'containswords',
+        ':': 'containswords',
+        "!=": LOOKUP_NEGATIVE_PREFIX + 'containswords',
+        '!:': LOOKUP_NEGATIVE_PREFIX + 'containswords',
+    },
+}

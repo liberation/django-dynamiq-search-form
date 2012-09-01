@@ -1,5 +1,8 @@
 # -*- coding: utf-8 -*-
 
+import shlex
+import re
+
 from datetime import date, timedelta
 
 from django.utils.dateformat import DateFormat
@@ -51,8 +54,6 @@ class FiltersBuilder(object):
         self.formset = formset
 
     def __call__(self):
-        filters = None
-
         stack = []  # List of OR-ed filters groups
         current_stack = []  # Single group of AND-ed filters, inside stack
         stack.append(current_stack)
@@ -80,6 +81,9 @@ class FiltersBuilder(object):
                 current_stack = []
                 stack.append(current_stack)
 
+        return self.stack_to_Q(stack)
+
+    def stack_to_Q(self, stack):
         filters = None
         label = []
         for j, substack in enumerate(stack):
@@ -289,6 +293,75 @@ class FiltersBuilder(object):
         query_filter.is_negated = is_negated
 
         return query_filter
+
+
+class StringFiltersBuilder(FiltersBuilder):
+
+    def __init__(self, q, form_class):
+        self.q = q
+        self.form_class = form_class
+
+    def __call__(self):
+        stack = []  # List of OR-ed filters groups
+        current_stack = []  # Single group of AND-ed filters, inside stack
+        stack.append(current_stack)
+        query_elements = self.split_query_string(self.q)
+        for i, el in enumerate(query_elements):
+            els = self.split_query_element(el)
+            filter_value = els[2] if len(els) == 3 else els[0]
+            if not filter_value:
+                # Skip empty fields
+                # Notice that doing so we can generate a stack with an
+                # empty substack
+                continue
+            if filter_value == 'OR':
+                # Since we found an OR operator, create new group to
+                # hold following AND-ed filters
+                current_stack = []
+                stack.append(current_stack)
+                continue
+            if filter_value == "AND":
+                continue   # filters are AND-ed by default
+            filter_name = els[0] if len(els) == 3 else self.form_class.DEFAULT_FILTER_NAME
+            filter_lookup = els[1] if len(els) == 3 else "="
+            filter_type = self.form_class.determine_filter_type(filter_name)
+            if filter_value.startswith('-') and not filter_lookup.startswith('!'):
+                filter_value = filter_value[1:]
+                filter_lookup = "!%s" % filter_lookup
+            filter_lookup = self.form_class.determine_filter_lookup_for_alias(filter_lookup, filter_type)
+            form = self.form_class(dict(
+                filter_name=filter_name,
+                filter_lookup=filter_lookup,
+                filter_value=filter_value,
+            ))
+            query_fragment = self.generate_filter_with_label(
+                form,
+                filter_name,
+                filter_lookup,
+                filter_value
+            )
+            current_stack.append(query_fragment)
+
+        return self.stack_to_Q(stack)
+
+    @classmethod
+    def split_query_string(cls, q):
+        """
+        Split on space unless they are in quotes.
+        """
+        return shlex.split(q)
+
+    @classmethod
+    def split_query_element(cls, s):
+        """
+        Split one query string element in ['field_name', 'operator', 'value'].
+        field:value => ['field', ':', 'value']
+        """
+        pattern = re.compile(ur"""
+            [<=>\:\!]{1,2}(?#Separator)
+            |[\w’\u2019 '\-]+(?#All others "words")
+            """, re.U | re.X)
+        return pattern.findall(s)
 
 
 class ChangeListUrlGetter(object):

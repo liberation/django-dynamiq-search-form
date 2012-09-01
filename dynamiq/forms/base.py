@@ -16,7 +16,7 @@ from .constants import (FILTER_LOOKUPS_STR, FILTER_LOOKUPS_INT,
                         FILTER_LOOKUPS_DATE, FILTER_LOOKUPS,
                         FILTER_RIGHT_OP, FILTER_DATE_RELATIVE,
                         LOOKUP_NEGATIVE_PREFIX, YES_NO,
-                        FILTER_LOOKUPS_YES_NO)
+                        FILTER_LOOKUPS_YES_NO, FILTER_LOOKUPS_ALIASES)
 
 
 class DynamiqOptionsMixin(object):
@@ -123,10 +123,12 @@ class DynamiqAdvancedForm(forms.Form):
     FILTER_RIGHT_OP = FILTER_RIGHT_OP
     FILTER_DATE_RELATIVE = FILTER_DATE_RELATIVE
     LOOKUP_NEGATIVE_PREFIX = LOOKUP_NEGATIVE_PREFIX
+    FILTER_LOOKUPS_ALIASES = FILTER_LOOKUPS_ALIASES
 
     FILTER_NAME = Choices(
         ('FULLTEXT', 'fulltext', u'Tout'),
     )
+    DEFAULT_FILTER_NAME = FILTER_NAME.FULLTEXT
     FILTERS_NAMES_BY_GROUP = {
         # 'group_name': FILTER_NAME.FOR_somegroup (subset)
     }
@@ -280,6 +282,22 @@ class DynamiqAdvancedForm(forms.Form):
         Return the "type" corresponding to a specific filter name.
         """
         return cls._FILTER_TYPE_BY_NAME.get(name)
+
+    @classmethod
+    def determine_filter_lookup_for_alias(cls, alias, ftype=None):
+        """
+        Return the original lookup name for an alias.
+        For example "!=" will return "not_contains" with default settings.
+        """
+        if (ftype
+            and ftype in cls.FILTER_LOOKUPS_ALIASES
+            and alias in cls.FILTER_LOOKUPS_ALIASES[ftype]):
+            lookup = cls.FILTER_LOOKUPS_ALIASES[ftype][alias]
+        elif alias in cls.FILTER_LOOKUPS_ALIASES:
+            lookup = cls.FILTER_LOOKUPS_ALIASES[alias]
+        else:
+            lookup = alias
+        return lookup
 
     def clean(self):
         """
