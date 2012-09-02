@@ -1,6 +1,7 @@
 # -*- coding: utf-8 -*-
 
 from django.db.models import Q
+from django.core.exceptions import ValidationError
 
 from ..utils import StringFiltersBuilder
 from .forms.haystack import BoatSearchForm
@@ -144,3 +145,16 @@ class StringFiltersBuilderTests(DynamiqBaseTests):
         Q3 = Q(captain__contains="Bernard Moitessier") & Q(fulltext__contains="Joshua")
         expected = Q1 | Q2 | Q3
         self.assertEqualQ(query, expected)
+
+    def test_do_not_raise_on_error_by_default(self):
+        q = 'year>=1966 month=3'  # month is invalid, it will be ignored
+        F = StringFiltersBuilder(q, BoatSearchForm)
+        query, label = F()
+        expected = Q(year__gte="1966")
+        self.assertEqualQ(query, expected)
+
+    def test_raise_on_error(self):
+        q = 'year>=1966 month=3'  # month is invalid
+        F = StringFiltersBuilder(q, BoatSearchForm, raise_on_error=True)
+        with self.assertRaises(ValidationError):
+            query, label = F()

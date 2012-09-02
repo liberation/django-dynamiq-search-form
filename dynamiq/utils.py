@@ -12,6 +12,7 @@ from django.utils.functional import curry
 from django.core.urlresolvers import reverse
 from django.conf import settings
 from django.utils.translation import ugettext as _
+from django.core.exceptions import ValidationError
 
 
 def get_advanced_search_formset_class(user, formset_base_class, form_class):
@@ -298,9 +299,16 @@ class FiltersBuilder(object):
 
 class StringFiltersBuilder(FiltersBuilder):
 
-    def __init__(self, q, form_class):
+    def __init__(self, q, form_class, raise_on_error=False):
+        """
+        `q` is the string to parse
+        `form_class`, the DynamiqAdvancedForm to use
+        `raise_on_error` define if we raise a ValidationError if some form
+        is not valid.
+        """
         self.q = q
         self.form_class = form_class
+        self.raise_on_error = raise_on_error
 
     def __call__(self):
         stack = []  # List of OR-ed filters groups
@@ -330,11 +338,21 @@ class StringFiltersBuilder(FiltersBuilder):
                 filter_value = filter_value[1:]
                 filter_lookup = "!%s" % filter_lookup
             filter_lookup = self.form_class.determine_filter_lookup_for_alias(filter_lookup, filter_type)
-            form = self.form_class(dict(
-                filter_name=filter_name,
-                filter_lookup=filter_lookup,
-                filter_value=filter_value,
-            ))
+            filter_value_receptacle = self.form_class.determine_filter_receptacle(filter_name, filter_type, filter_lookup)
+            form = self.form_class({
+                "filter_name": filter_name,
+                "%s_lookup" % filter_type: filter_lookup,
+                'filter_value_%s' % filter_value_receptacle: filter_value,
+            })
+            if not form.is_valid():
+                if self.raise_on_error:
+                    raise ValidationError(form.errors)
+                else:
+                    # By default, the search query is displayed to user
+                    # in a readable mode ("x contains y and z contains w")
+                    # so not raising if some field is invalid seems an
+                    # acceptable behaviour
+                    continue
             query_fragment = self.generate_filter_with_label(
                 form,
                 filter_name,
