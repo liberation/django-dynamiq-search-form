@@ -136,6 +136,20 @@ class StringFiltersBuilderTests(DynamiqBaseTests):
         expected = Q(year__gte="1966") & Q(year__lte="1978")
         self.assertEqualQ(query, expected)
 
+    def test_gt_can_be_used(self):
+        q = 'hull>1'
+        F = StringFiltersBuilder(q, BoatSearchForm)
+        query, label = F()
+        expected = Q(hull__gt="1")
+        self.assertEqualQ(query, expected)
+
+    def test_lt_can_be_used(self):
+        q = 'mast<3'
+        F = StringFiltersBuilder(q, BoatSearchForm)
+        query, label = F()
+        expected = Q(mast__lt="3")
+        self.assertEqualQ(query, expected)
+
     def test_complex_search(self):
         q = """captain:Tabarly year>=1966 mast=1 OR captain!=Cammas year<=1999 OR captain="Bernard Moitessier" Joshua"""
         F = StringFiltersBuilder(q, BoatSearchForm)

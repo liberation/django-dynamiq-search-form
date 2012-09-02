@@ -30,6 +30,8 @@ FILTER_LOOKUPS_YES_NO = Choices(
 FILTER_LOOKUPS_INT = Choices(
     ('EXACT', 'exact', _('is')),
     ('NOT_EXACT', LOOKUP_NEGATIVE_PREFIX + 'exact', _('is not')),
+    ('GT', 'gt', _('greather than')),
+    ('LT', 'lt', _('lower than')),
     ('GTE', 'gte', _('greather than or equal to')),
     ('LTE', 'lte', _('lower than or equal to')),
     # ('BETWEEN', 'between', 'entre'), TODO
@@ -75,6 +77,8 @@ FILTER_LOOKUPS_ALIASES = {
     ':': 'exact',
     "!=": LOOKUP_NEGATIVE_PREFIX + 'exact',
     '!:': LOOKUP_NEGATIVE_PREFIX + 'exact',
+    '>': 'gt',
+    '<': 'lt',
     '>=': 'gte',
     '<=': 'lte',
     'fulltext': {
