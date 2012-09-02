@@ -334,9 +334,10 @@ class StringFiltersBuilder(FiltersBuilder):
             filter_name = els[0] if len(els) == 3 else self.form_class.DEFAULT_FILTER_NAME
             filter_lookup = els[1] if len(els) == 3 else "="
             filter_type = self.form_class.determine_filter_type(filter_name)
-            if filter_value.startswith('-') and not filter_lookup.startswith('!'):
+            if filter_value.startswith('-'):
                 filter_value = filter_value[1:]
-                filter_lookup = "!%s" % filter_lookup
+                if not filter_lookup.startswith('!'):
+                    filter_lookup = "!%s" % filter_lookup
             filter_value = filter_value.strip('"+')  # TODO: manage exact
             filter_lookup = self.form_class.determine_filter_lookup_for_alias(filter_lookup, filter_type)
             filter_value_receptacle = self.form_class.determine_filter_receptacle(filter_name, filter_type, filter_lookup)
