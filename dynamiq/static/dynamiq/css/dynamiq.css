@@ -142,6 +142,9 @@ p#no-result {
 }
 
 /* *** Advanced search *** */
+#dynamiq_advanced_search {
+    display: none;
+}
 .advanced_search {
     margin-left: auto;
     margin-right: auto;
