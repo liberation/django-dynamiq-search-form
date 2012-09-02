@@ -1,13 +1,13 @@
 # SOME DESCRIPTIVE TITLE.
 # Copyright (C) YEAR THE PACKAGE'S COPYRIGHT HOLDER
 # This file is distributed under the same license as the PACKAGE package.
-# FIRST AUTHOR <yb@enix.org>, 2012.
+# Yohan Boniface <yb@enix.org>, 2012.
 #
 msgid ""
 msgstr ""
 "Project-Id-Version: 0.0.1\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2012-08-28 00:06+0200\n"
+"POT-Creation-Date: 2012-09-02 15:31+0200\n"
 "PO-Revision-Date: 2012-08-28 00:06+0200\n"
 "Last-Translator: Yohan Boniface <yb@enix.org>\n"
 "Language-Team: FR <devweb@liberation.fr>\n"
@@ -17,13 +17,111 @@ msgstr ""
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=(n > 1)\n"
 
+#: utils.py:99 forms/constants.py:14
+msgid "AND"
+msgstr "ET"
+
+#: utils.py:108 forms/constants.py:15
+msgid "OR"
+msgstr "OU"
+
+#: forms/constants.py:8
+msgid "yes"
+msgstr "oui"
+
+#: forms/constants.py:9
+msgid "no"
+msgstr "non"
+
+#: forms/constants.py:21 forms/constants.py:26 forms/constants.py:31
+#: forms/constants.py:40
+msgid "is"
+msgstr "est"
+
+#: forms/constants.py:22 forms/constants.py:27 forms/constants.py:32
+msgid "is not"
+msgstr "n'est pas"
+
+#: forms/constants.py:33 forms/constants.py:41
+msgid "greather than or equal to"
+msgstr "supérieur(e) ou égal(e) à"
+
+#: forms/constants.py:34 forms/constants.py:42
+msgid "lower than or equal to"
+msgstr "inférieur(e) ou égal(e) à"
+
+#: forms/constants.py:39
+msgid "from"
+msgstr "depuis"
+
+#: forms/constants.py:43
+msgid "between"
+msgstr "entre"
+
+#: forms/constants.py:47
+msgid "today"
+msgstr "aujourd'hui"
+
+#: forms/constants.py:48
+msgid "yesterday"
+msgstr "hier"
+
+#: forms/constants.py:49
+msgid "three days"
+msgstr "trois jours"
+
+#: forms/constants.py:50
+msgid "one week"
+msgstr "une semaine"
+
+#: forms/constants.py:51
+msgid "six months"
+msgstr "six mois"
+
+#: forms/constants.py:52
+msgid "one year"
+msgstr "un an"
+
+#: forms/constants.py:53
+msgid "two years"
+msgstr "deux ans"
+
+#: forms/constants.py:54
+msgid "tomorrow"
+msgstr "demain"
+
+#: forms/constants.py:58 forms/haystack/constants.py:13
+#: forms/sesql/constants.py:18
+msgid "contains"
+msgstr "contient"
+
+#: forms/constants.py:59 forms/haystack/constants.py:14
+#: forms/sesql/constants.py:19
+msgid "contains exactly"
+msgstr "contient exactement"
+
+#: forms/constants.py:60 forms/haystack/constants.py:15
+#: forms/sesql/constants.py:20
+msgid "does not contain"
+msgstr "ne contient pas"
+
+#: forms/sesql/constants.py:13
+msgid "with total (slower)"
+msgstr "avec total (+ lent)"
+
+#: forms/sesql/constants.py:14
+msgid "first results (fast)"
+msgstr "premiers résultats (rapide)"
+
 #: templates/dynamiq/advanced_formset.html:4
 msgid "Advanced search"
 msgstr "Recherche avancée"
 
 #: templates/dynamiq/advanced_formset.html:7
 msgid "Form is not valid. Please correct the errors below:"
-msgstr "Le formulaire n'est pas valide, merci de corriger les erreurs suivantes sur les critères encadrés de rouge:"
+msgstr ""
+"Le formulaire n'est pas valide, merci de corriger les erreurs suivantes sur "
+"les critères encadrés de rouge:"
 
 #: templates/dynamiq/advanced_formset.html:27
 msgid "Model"

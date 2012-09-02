@@ -11,6 +11,7 @@ from django.forms.formsets import formset_factory
 from django.utils.functional import curry
 from django.core.urlresolvers import reverse
 from django.conf import settings
+from django.utils.translation import ugettext as _
 
 
 def get_advanced_search_formset_class(user, formset_base_class, form_class):
@@ -95,7 +96,7 @@ class FiltersBuilder(object):
                     tmp_label.append(fragment.label)
                 else:
                     query_fragment &= fragment
-                    tmp_label.append(LabelOperator('ET'))
+                    tmp_label.append(LabelOperator(_('AND')))
                     tmp_label.append(fragment.label)
             if query_fragment:
                 # Substack was empty (certainly an empty field)
@@ -104,7 +105,7 @@ class FiltersBuilder(object):
                     label.extend(tmp_label)
                 else:
                     filters |= query_fragment
-                    label.append(LabelOperator('OU'))
+                    label.append(LabelOperator(_('OR')))
                     label.extend(tmp_label)
 
         return filters, label
