@@ -18,7 +18,7 @@ class StringFiltersBuilderTests(DynamiqBaseTests):
             "AND",
             "country!=FR",
             "OR",
-            "-Le PEN Marine",
+            '-"Le PEN Marine"',
             "country:FR",
             "is_active:1",
             "group=NI"
@@ -137,7 +137,7 @@ class StringFiltersBuilderTests(DynamiqBaseTests):
         self.assertEqualQ(query, expected)
 
     def test_complex_search(self):
-        q = "captain:Tabarly year>=1966 mast=1 OR captain!=Cammas year<=1999 OR captain='Bernard Moitessier' Joshua"
+        q = """captain:Tabarly year>=1966 mast=1 OR captain!=Cammas year<=1999 OR captain="Bernard Moitessier" Joshua"""
         F = StringFiltersBuilder(q, BoatSearchForm)
         query, label = F()
         Q1 = Q(captain__contains="Tabarly") & Q(year__gte="1966") & Q(mast="1")

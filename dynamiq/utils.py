@@ -337,6 +337,7 @@ class StringFiltersBuilder(FiltersBuilder):
             if filter_value.startswith('-') and not filter_lookup.startswith('!'):
                 filter_value = filter_value[1:]
                 filter_lookup = "!%s" % filter_lookup
+            filter_value = filter_value.strip('"+')  # TODO: manage exact
             filter_lookup = self.form_class.determine_filter_lookup_for_alias(filter_lookup, filter_type)
             filter_value_receptacle = self.form_class.determine_filter_receptacle(filter_name, filter_type, filter_lookup)
             form = self.form_class({
@@ -368,7 +369,8 @@ class StringFiltersBuilder(FiltersBuilder):
         """
         Split on space unless they are in quotes.
         """
-        return shlex.split(q)
+        pattern = re.compile(ur"""(?:[^ "]|"[^"]*")+""", re.U | re.X)
+        return pattern.findall(q)
 
     @classmethod
     def split_query_element(cls, s):
