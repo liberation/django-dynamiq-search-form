@@ -43,12 +43,10 @@ msgid "is not"
 msgstr "n'est pas"
 
 #: forms/constants.py:33
-#, fuzzy
 msgid "greather than"
 msgstr "supérieur(e) à"
 
 #: forms/constants.py:34
-#, fuzzy
 msgid "lower than"
 msgstr "inférieur(e) à"
 
