@@ -1,12 +1,22 @@
 from django.utils.unittest import TestCase
 
-from ..utils import get_advanced_search_formset_class, FiltersBuilder
+from ..utils import get_advanced_search_formset_class, FiltersBuilder, StringFiltersBuilder
 
 
 class DynamiqBaseTests(TestCase):
 
     def assertEqualQ(self, Q1, Q2):
         self.assertEqual(str(Q1), str(Q2))
+
+
+class DynamiqBaseStringFiltersBuilderTests(DynamiqBaseTests):
+
+    form = None
+
+    def run_test(self, q, expected):
+        F = StringFiltersBuilder(q, self.form)
+        query, label = F()
+        self.assertEqualQ(query, expected)
 
 
 class DynamiqBaseFormsetTests(DynamiqBaseTests):

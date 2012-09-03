@@ -6,10 +6,12 @@ from django.core.exceptions import ValidationError
 
 from ..utils import StringFiltersBuilder
 from .forms.haystack import BoatSearchForm, BoatSearchAdvancedFormset
-from .base import DynamiqBaseTests, DynamiqBaseFormsetTests
+from .base import DynamiqBaseFormsetTests, DynamiqBaseStringFiltersBuilderTests
 
 
-class StringFiltersBuilderTests(DynamiqBaseTests):
+class StringFiltersBuilderTests(DynamiqBaseStringFiltersBuilderTests):
+
+    form = BoatSearchForm
 
     def test_split_query_string_must_split_on_spaces_unless_in_quotes(self):
         s = """daniel AND country!=FR OR -"Le PEN Marine" country:FR is_active:1 group=NI"""
@@ -42,139 +44,101 @@ class StringFiltersBuilderTests(DynamiqBaseTests):
 
     def test_default_filter_is_used_if_not_given(self):
         q = "Spray"
-        F = StringFiltersBuilder(q, BoatSearchForm)
-        query, label = F()
         expected = Q(fulltext__contains="Spray")
-        self.assertEqualQ(query, expected)
+        self.run_test(q, expected)
 
     def test_simple_search_is_ANDed(self):
         q = "Pen Duick"
-        F = StringFiltersBuilder(q, BoatSearchForm)
-        query, label = F()
         expected = Q(fulltext__contains="Pen") & Q(fulltext__contains="Duick")
-        self.assertEqualQ(query, expected)
+        self.run_test(q, expected)
 
     def test_search_with_AND_is_ANDed(self):
         q = "Joshua AND Moitessier"
-        F = StringFiltersBuilder(q, BoatSearchForm)
-        query, label = F()
         expected = Q(fulltext__contains="Joshua") & Q(fulltext__contains="Moitessier")
-        self.assertEqualQ(query, expected)
+        self.run_test(q, expected)
 
     def test_search_with_OR_is_ORed(self):
         q = "Joshua OR Moitessier"
-        F = StringFiltersBuilder(q, BoatSearchForm)
-        query, label = F()
         expected = Q(fulltext__contains="Joshua") | Q(fulltext__contains="Moitessier")
-        self.assertEqualQ(query, expected)
+        self.run_test(q, expected)
 
     def test_OR_and_AND_can_be_mixed(self):
         q = "Pen Duick OR Commodore Explorer"
-        F = StringFiltersBuilder(q, BoatSearchForm)
-        query, label = F()
         Q1 = Q(fulltext__contains="Pen") & Q(fulltext__contains="Duick")
         Q2 = Q(fulltext__contains="Commodore") & Q(fulltext__contains="Explorer")
         expected = Q1 | Q2
-        self.assertEqualQ(query, expected)
+        self.run_test(q, expected)
 
     def test_search_field_can_be_defined(self):
         q = "captain:Tabarly"
-        F = StringFiltersBuilder(q, BoatSearchForm)
-        query, label = F()
         expected = Q(captain__contains="Tabarly")
-        self.assertEqualQ(query, expected)
+        self.run_test(q, expected)
 
     def test_operator_equal_can_be_used(self):
         q = "captain=Tabarly"
-        F = StringFiltersBuilder(q, BoatSearchForm)
-        query, label = F()
         expected = Q(captain__contains="Tabarly")
-        self.assertEqualQ(query, expected)
+        self.run_test(q, expected)
 
     def test_lookup_can_be_negated_on_operator(self):
         q = "captain!=Tabarly"
-        F = StringFiltersBuilder(q, BoatSearchForm)
-        query, label = F()
         expected = ~Q(captain__contains="Tabarly")
-        self.assertEqualQ(query, expected)
+        self.run_test(q, expected)
         q = "captain!:Tabarly"
-        F = StringFiltersBuilder(q, BoatSearchForm)
-        query, label = F()
         expected = ~Q(captain__contains="Tabarly")
-        self.assertEqualQ(query, expected)
+        self.run_test(q, expected)
 
     def test_lookup_can_be_negated_on_value(self):
         q = "-Tabarly"
-        F = StringFiltersBuilder(q, BoatSearchForm)
-        query, label = F()
         expected = ~Q(fulltext__contains="Tabarly")
-        self.assertEqualQ(query, expected)
+        self.run_test(q, expected)
 
     def test_quoted_terms_are_not_splited(self):
         q = '"Eric Tabarly"'
-        F = StringFiltersBuilder(q, BoatSearchForm)
-        query, label = F()
         expected = Q(fulltext__contains="Eric Tabarly")
-        self.assertEqualQ(query, expected)
+        self.run_test(q, expected)
 
     def test_quoted_terms_can_be_negated(self):
         q = '-"Eric Tabarly"'
-        F = StringFiltersBuilder(q, BoatSearchForm)
-        query, label = F()
         expected = ~Q(fulltext__contains="Eric Tabarly")
-        self.assertEqualQ(query, expected)
+        self.run_test(q, expected)
 
     def test_gte_can_be_used(self):
         q = 'year>=1966'
-        F = StringFiltersBuilder(q, BoatSearchForm)
-        query, label = F()
         expected = Q(year__gte="1966")
-        self.assertEqualQ(query, expected)
+        self.run_test(q, expected)
 
     def test_lte_can_be_used(self):
         q = 'year<=1966'
-        F = StringFiltersBuilder(q, BoatSearchForm)
-        query, label = F()
         expected = Q(year__lte="1966")
-        self.assertEqualQ(query, expected)
+        self.run_test(q, expected)
 
     def test_gte_and_lte_can_be_mixed(self):
         q = 'year>=1966 year<=1978'
-        F = StringFiltersBuilder(q, BoatSearchForm)
-        query, label = F()
         expected = Q(year__gte="1966") & Q(year__lte="1978")
-        self.assertEqualQ(query, expected)
+        self.run_test(q, expected)
 
     def test_gt_can_be_used(self):
         q = 'hull>1'
-        F = StringFiltersBuilder(q, BoatSearchForm)
-        query, label = F()
         expected = Q(hull__gt="1")
-        self.assertEqualQ(query, expected)
+        self.run_test(q, expected)
 
     def test_lt_can_be_used(self):
         q = 'mast<3'
-        F = StringFiltersBuilder(q, BoatSearchForm)
-        query, label = F()
         expected = Q(mast__lt="3")
-        self.assertEqualQ(query, expected)
+        self.run_test(q, expected)
 
     def test_complex_search(self):
         q = """captain:Tabarly year>=1966 mast=1 OR captain!=Cammas year<=1999 OR captain="Bernard Moitessier" Joshua"""
-        F = StringFiltersBuilder(q, BoatSearchForm)
-        query, label = F()
         Q1 = Q(captain__contains="Tabarly") & Q(year__gte="1966") & Q(mast="1")
         Q2 = ~Q(captain__contains="Cammas") & Q(year__lte="1999")
         Q3 = Q(captain__contains="Bernard Moitessier") & Q(fulltext__contains="Joshua")
         expected = Q1 | Q2 | Q3
-        self.assertEqualQ(query, expected)
+        self.run_test(q, expected)
 
     def test_do_not_raise_on_error_by_default(self):
         q = 'year>=1966 month=3'  # month is invalid, it will be ignored
-        F = StringFiltersBuilder(q, BoatSearchForm)
-        query, label = F()
         expected = Q(year__gte="1966")
-        self.assertEqualQ(query, expected)
+        self.run_test(q, expected)
 
     def test_raise_on_error(self):
         q = 'year>=1966 month=3'  # month is invalid
