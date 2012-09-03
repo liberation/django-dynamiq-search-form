@@ -137,17 +137,11 @@ class DynamiqAdvancedForm(forms.Form):
     YES_NO = YES_NO
 
     # placeholder for fields mapping
-    _FILTER_TYPE_BY_NAME = {
-        # 'created_at': 'date',
-        # 'created_by': 'int',
-        # 'fulltext': 'fulltext',
-    }
-    _FILTER_VALUE_RECEPTACLE_BY_NAME = {
-         # 'created_at': 'date',
-         # 'created_by': 'created_by',
-         # 'fulltext': 'fulltext',
-    }
-    _FILTER_AUTOCOMPLETE_LOOKUP_BY_NAME = {
+    _FILTERS_BY_FIELD = {
+        # 'field_name': {
+        #     'type': 'field_type',
+        #     'receptacle': 'field_receptacle',
+        # },
     }
 
     # List of filters "builders": list of (label, {filter params}) used to dynamically
@@ -258,7 +252,7 @@ class DynamiqAdvancedForm(forms.Form):
 
     @classmethod
     def determine_filter_autocomplete_lookup(cls, filter_name):
-        return cls._FILTER_AUTOCOMPLETE_LOOKUP_BY_NAME.get(filter_name)
+        return cls._FILTERS_BY_FIELD.get(filter_name, {}).get('autocomplete_lookup')
 
     @classmethod
     def determine_filter_receptacle(cls, filter_name, filter_type=None, filter_lookup=None):
@@ -280,7 +274,7 @@ class DynamiqAdvancedForm(forms.Form):
         elif filter_type == 'date':
             receptacle_name = 'date'
         else:
-            receptacle_name = cls._FILTER_VALUE_RECEPTACLE_BY_NAME.get(filter_name)
+            receptacle_name = cls._FILTERS_BY_FIELD.get(filter_name, {}).get('receptacle')
         return receptacle_name
 
     @classmethod
@@ -288,7 +282,7 @@ class DynamiqAdvancedForm(forms.Form):
         """
         Return the "type" corresponding to a specific filter name.
         """
-        return cls._FILTER_TYPE_BY_NAME.get(name)
+        return cls._FILTERS_BY_FIELD.get(name, {}).get('type')
 
     @classmethod
     def determine_filter_lookup_for_alias(cls, alias, ftype=None):

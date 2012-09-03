@@ -3,7 +3,6 @@
 from extended_choices import Choices
 
 from dynamiq.forms.haystack import HaystackForm
-from dynamiq.forms.haystack.constants import FILTER_LOOKUPS_ALIASES
 from dynamiq.forms.base import DynamiqSearchOptionsForm, DynamiqAdvancedFormset
 from dynamiq.fields import DynamiqStrChoiceField
 
@@ -41,27 +40,40 @@ class BoatSearchForm(HaystackForm):
 
     FILTER_NAME = FILTER_NAME
 
-    _FILTER_TYPE_BY_NAME = {
-        FILTER_NAME.FULLTEXT: 'fulltext',
-        FILTER_NAME.CAPTAIN: 'fulltext',
-        FILTER_NAME.LENGTH: 'int',
-        FILTER_NAME.KIND: 'str',
-        FILTER_NAME.YEAR: 'date',
-        FILTER_NAME.HULL: 'int',
-        FILTER_NAME.MAST: 'int',
-        FILTER_NAME.ACTIVE: 'yes_no',
+    _FILTERS_BY_FIELD = {
+        FILTER_NAME.FULLTEXT: {
+            'type': 'fulltext',
+            'receptacle': 'fulltext'
+        },
+        FILTER_NAME.CAPTAIN: {
+            'type': 'fulltext',
+            'receptacle': 'fulltext'
+        },
+        FILTER_NAME.LENGTH: {
+            'type': 'int',
+            'receptacle': 'int'
+        },
+        FILTER_NAME.KIND: {
+            'type': 'str',
+            'receptacle': 'kind'
+        },
+        FILTER_NAME.YEAR: {
+            'type': 'date',
+            'receptacle': 'date'
+        },
+        FILTER_NAME.HULL: {
+            'type': 'int',
+            'receptacle': 'int'
+        },
+        FILTER_NAME.MAST: {
+            'type': 'int',
+            'receptacle': 'int'
+        },
+        FILTER_NAME.ACTIVE: {
+            'type': 'yes_no',
+            'receptacle': 'yes_no'
+        },
     }
-    _FILTER_VALUE_RECEPTACLE_BY_NAME = {
-        FILTER_NAME.FULLTEXT: 'fulltext',
-        FILTER_NAME.CAPTAIN: 'fulltext',
-        FILTER_NAME.LENGTH: 'int',
-        FILTER_NAME.KIND: 'kind',
-        FILTER_NAME.YEAR: 'date',
-        FILTER_NAME.HULL: 'int',
-        FILTER_NAME.MAST: 'int',
-        FILTER_NAME.ACTIVE: 'yes_no',
-    }
-    FILTER_LOOKUPS_ALIASES = FILTER_LOOKUPS_ALIASES
     filter_value_kind = DynamiqStrChoiceField(KIND)
 
 
