@@ -27,6 +27,11 @@ FILTER_LOOKUPS_YES_NO = Choices(
     ('NOT_EXACT', LOOKUP_NEGATIVE_PREFIX + 'exact', _('is not')),
 )
 
+FILTER_LOOKUPS_ID = Choices(
+    ('EXACT', 'exact', _('is')),
+    ('NOT_EXACT', LOOKUP_NEGATIVE_PREFIX + 'exact', _('is not')),
+)
+
 FILTER_LOOKUPS_INT = Choices(
     ('EXACT', 'exact', _('is')),
     ('NOT_EXACT', LOOKUP_NEGATIVE_PREFIX + 'exact', _('is not')),
@@ -68,6 +73,7 @@ FILTER_LOOKUPS = {
     'int': FILTER_LOOKUPS_INT,
     'date': FILTER_LOOKUPS_DATE,
     'yes_no': FILTER_LOOKUPS_YES_NO,
+    'id': FILTER_LOOKUPS_ID,
 }
 
 # Put generic ones at first level,

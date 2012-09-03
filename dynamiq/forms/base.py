@@ -15,7 +15,7 @@ from dynamiq.widgets import DynamiqAdvancedDynamicSelect
 from .constants import (FILTER_LOOKUPS_STR, FILTER_LOOKUPS_INT,
                         FILTER_LOOKUPS_DATE, FILTER_LOOKUPS,
                         FILTER_RIGHT_OP, FILTER_DATE_RELATIVE,
-                        LOOKUP_NEGATIVE_PREFIX, YES_NO,
+                        LOOKUP_NEGATIVE_PREFIX, YES_NO, FILTER_LOOKUPS_ID,
                         FILTER_LOOKUPS_YES_NO, FILTER_LOOKUPS_ALIASES)
 
 
@@ -117,6 +117,7 @@ class DynamiqAdvancedForm(forms.Form):
     FILTER_LOOKUPS_FULLTEXT = ()  # Defined by SeSQL or Haystack
     FILTER_LOOKUPS_STR = FILTER_LOOKUPS_STR
     FILTER_LOOKUPS_INT = FILTER_LOOKUPS_INT
+    FILTER_LOOKUPS_ID = FILTER_LOOKUPS_ID
     FILTER_LOOKUPS_YES_NO = FILTER_LOOKUPS_YES_NO
     FILTER_LOOKUPS_DATE = FILTER_LOOKUPS_DATE
     FILTER_LOOKUPS = FILTER_LOOKUPS
@@ -192,6 +193,11 @@ class DynamiqAdvancedForm(forms.Form):
         extended_choices=FILTER_LOOKUPS_INT,
         widget=forms.Select(attrs={'class': 'filter_lookup'})
     )
+    id_lookup = ExtendedChoiceField(
+        required=False,
+        extended_choices=FILTER_LOOKUPS_ID,
+        widget=forms.Select(attrs={'class': 'filter_lookup'})
+    )
     yes_no_lookup = ExtendedChoiceField(
         required=False,
         extended_choices=FILTER_LOOKUPS_YES_NO,
@@ -210,6 +216,7 @@ class DynamiqAdvancedForm(forms.Form):
     filter_value_date_between = BetweenDateField(required=False, widgets_attrs={'class': 'filter_value filter_value_multiple'})
     filter_value_date_relative = DynamiqIntChoiceField(FILTER_DATE_RELATIVE)
     filter_value_int = forms.IntegerField(required=False, widget=forms.TextInput(attrs={'class': 'filter_value'}))
+    filter_value_id = forms.IntegerField(required=False, widget=forms.TextInput(attrs={'class': 'filter_value'}))
     filter_value_autocomplete = DynamiqSearchAutoCompleteField(required=False, widgets_attrs={'class': 'filter_value autocompleted'})
     filter_value_yes_no = DynamiqBooleanChoiceField(YES_NO)
 
