@@ -36,6 +36,7 @@ class StringFiltersBuilderTests(DynamiqBaseTests):
         do("country!=FR", ['country', '!=', 'FR'])
         do("OR", ['OR'])
         do("-Le PEN Marine", ['-Le PEN Marine'])
+        do('-"Le PEN Marine"', ['-"Le PEN Marine"'])
         do("country:FR", ['country', ':', 'FR'])
 
     def test_default_filter_is_used_if_not_given(self):
@@ -113,6 +114,13 @@ class StringFiltersBuilderTests(DynamiqBaseTests):
         F = StringFiltersBuilder(q, BoatSearchForm)
         query, label = F()
         expected = Q(fulltext__contains="Eric Tabarly")
+        self.assertEqualQ(query, expected)
+
+    def test_quoted_terms_can_be_negated(self):
+        q = '-"Eric Tabarly"'
+        F = StringFiltersBuilder(q, BoatSearchForm)
+        query, label = F()
+        expected = ~Q(fulltext__contains="Eric Tabarly")
         self.assertEqualQ(query, expected)
 
     def test_gte_can_be_used(self):

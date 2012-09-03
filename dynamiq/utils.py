@@ -381,7 +381,7 @@ class StringFiltersBuilder(FiltersBuilder):
         """
         pattern = re.compile(ur"""
             [<=>\:\!]{1,2}(?#Separator)
-            |[\w’\u2019 '\-]+(?#All others "words")
+            |[\w’\u2019 '"\-]+(?#All others "words")
             """, re.U | re.X)
         return pattern.findall(s)
 
