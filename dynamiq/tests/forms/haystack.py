@@ -4,12 +4,19 @@ from extended_choices import Choices
 
 from dynamiq.forms.haystack import HaystackForm
 from dynamiq.forms.base import DynamiqSearchOptionsForm, DynamiqAdvancedFormset
-from dynamiq.fields import DynamiqStrChoiceField
+from dynamiq.fields import DynamiqStrChoiceField, DynamiqIntChoiceField
 
 
 KIND = Choices(
     ('SAIL', 'sail', 'Sailboat'),
     ('MOTOR', 'motor', 'Motorboat'),
+)
+
+RIGGING = Choices(
+    ('SLOOP', 1, 'Sloop'),
+    ('CUTTER', 2, 'Cutter'),
+    ('KETCH', 3, 'Ketch'),
+    ('SCHOONER', 4, 'Shooner'),
 )
 
 FILTER_NAME = Choices(
@@ -20,6 +27,7 @@ FILTER_NAME = Choices(
     ('HULL', 'hull', u'Number of hulls'),
     ('MAST', 'mast', u'Number of masts'),
     ('KIND', 'kind', u'Kind of boat'),
+    ('RIGGING', 'rigging', u'Rigging of the sailboat'),
     ('ACTIVE', 'active', u'Still active'),
 )
 
@@ -57,6 +65,10 @@ class BoatSearchForm(HaystackForm):
             'type': 'str',
             'receptacle': 'kind'
         },
+        FILTER_NAME.RIGGING: {
+            'type': 'id',
+            'receptacle': 'rigging'
+        },
         FILTER_NAME.YEAR: {
             'type': 'date',
             'receptacle': 'date'
@@ -75,6 +87,7 @@ class BoatSearchForm(HaystackForm):
         },
     }
     filter_value_kind = DynamiqStrChoiceField(KIND)
+    filter_value_rigging = DynamiqIntChoiceField(RIGGING)
 
 
 class BoatSearchAdvancedFormset(DynamiqAdvancedFormset):
