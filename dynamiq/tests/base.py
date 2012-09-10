@@ -1,25 +1,26 @@
 from django.utils.unittest import TestCase
 
-from ..utils import get_advanced_search_formset_class, FiltersBuilder, StringFiltersBuilder
+from ..utils import (get_advanced_search_formset_class, FormsetQBuilder,
+                     ParsedStringQBuilder)
 
 
-class DynamiqBaseTests(TestCase):
+class BaseTests(TestCase):
 
     def assertEqualQ(self, Q1, Q2):
         self.assertEqual(str(Q1), str(Q2))
 
 
-class DynamiqBaseStringFiltersBuilderTests(DynamiqBaseTests):
+class BaseStringParsedQBuilderTests(BaseTests):
 
     form = None
 
     def run_test(self, q, expected):
-        F = StringFiltersBuilder(q, self.form)
+        F = ParsedStringQBuilder(q, self.form)
         query, label = F()
         self.assertEqualQ(query, expected)
 
 
-class DynamiqBaseFormsetTests(DynamiqBaseTests):
+class BaseFormsetQBuilderTests(BaseTests):
     """
     Inherite from this class for testing formsets.
     Just define formset and form.
@@ -46,7 +47,7 @@ class DynamiqBaseFormsetTests(DynamiqBaseTests):
         formset = formset_class(data)
         formset.full_clean()
         if formset.is_valid():
-            F = FiltersBuilder(formset)
+            F = FormsetQBuilder(formset)
             query, label = F()
         else:
             self.fail(formset.errors)

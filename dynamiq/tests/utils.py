@@ -4,18 +4,18 @@ from django.db.models import Q
 from django.core.exceptions import ValidationError
 
 
-from ..utils import StringFiltersBuilder
+from ..utils import ParsedStringQBuilder
 from .forms.haystack import BoatSearchForm, BoatSearchAdvancedFormset
-from .base import DynamiqBaseFormsetTests, DynamiqBaseStringFiltersBuilderTests
+from .base import BaseFormsetQBuilderTests, BaseStringParsedQBuilderTests
 
 
-class StringFiltersBuilderTests(DynamiqBaseStringFiltersBuilderTests):
+class StringParsedQBuilderTests(BaseStringParsedQBuilderTests):
 
     form = BoatSearchForm
 
     def test_split_query_string_must_split_on_spaces_unless_in_quotes(self):
         s = """daniel AND country!=FR OR -"Le PEN Marine" country:FR is_active:1 group=NI"""
-        output = StringFiltersBuilder.split_query_string(s)
+        output = ParsedStringQBuilder.split_query_string(s)
         expected_output = [
             "daniel",
             "AND",
@@ -31,7 +31,7 @@ class StringFiltersBuilderTests(DynamiqBaseStringFiltersBuilderTests):
     def test_split_query_element(self):
         def do(input, output):
             self.assertEqual(
-                StringFiltersBuilder.split_query_element(input),
+                ParsedStringQBuilder.split_query_element(input),
                 output,
             )
         do("daniel", ['daniel'])
@@ -142,12 +142,12 @@ class StringFiltersBuilderTests(DynamiqBaseStringFiltersBuilderTests):
 
     def test_raise_on_error(self):
         q = 'year>=1966 month=3'  # month is invalid
-        F = StringFiltersBuilder(q, BoatSearchForm, raise_on_error=True)
+        F = ParsedStringQBuilder(q, BoatSearchForm, raise_on_error=True)
         with self.assertRaises(ValidationError):
             query, label = F()
 
 
-class FiltersBuilderTests(DynamiqBaseFormsetTests):
+class FormsetQBuilderTests(BaseFormsetQBuilderTests):
 
     formset = BoatSearchAdvancedFormset
     form = BoatSearchForm

@@ -47,43 +47,11 @@ class LabelModel(unicode):
     pass
 
 
-class FiltersBuilder(object):
+class BaseQBuilder(object):
     """
     Util that generates a Q query (set of Q objects connected to each others
     either by an OR or an AND operator) from an advanced search formset.
     """
-    def __init__(self, formset):
-        self.formset = formset
-
-    def __call__(self):
-        stack = []  # List of OR-ed filters groups
-        current_stack = []  # Single group of AND-ed filters, inside stack
-        stack.append(current_stack)
-        for i, form in enumerate(self.formset.forms):
-            cleaned_data = form.cleaned_data
-            filter_name = cleaned_data.get('filter_name')
-            filter_lookup = cleaned_data.get('filter_lookup')
-            filter_value = cleaned_data.get('filter_value')
-            filter_right_op = cleaned_data.get('filter_right_op')
-            if filter_value == '' or filter_value is None:
-                # Skip empty fields
-                # Notice that doing so we can generate a stack with an
-                # empty substack
-                continue
-            query_fragment = self.generate_filter_with_label(
-                form, filter_name,
-                filter_lookup,
-                filter_value
-            )
-
-            current_stack.append(query_fragment)
-            if filter_right_op == 'OR':
-                # Since we found an OR operator, create new group to
-                # hold following AND-ed filters
-                current_stack = []
-                stack.append(current_stack)
-
-        return self.stack_to_Q(stack)
 
     def stack_to_Q(self, stack):
         filters = None
@@ -297,7 +265,44 @@ class FiltersBuilder(object):
         return query_filter
 
 
-class StringFiltersBuilder(FiltersBuilder):
+class FormsetQBuilder(BaseQBuilder):
+
+    def __init__(self, formset):
+        self.formset = formset
+
+    def __call__(self):
+        stack = []  # List of OR-ed filters groups
+        current_stack = []  # Single group of AND-ed filters, inside stack
+        stack.append(current_stack)
+        for i, form in enumerate(self.formset.forms):
+            cleaned_data = form.cleaned_data
+            filter_name = cleaned_data.get('filter_name')
+            filter_lookup = cleaned_data.get('filter_lookup')
+            filter_value = cleaned_data.get('filter_value')
+            filter_right_op = cleaned_data.get('filter_right_op')
+            if filter_value == '' or filter_value is None:
+                # Skip empty fields
+                # Notice that doing so we can generate a stack with an
+                # empty substack
+                continue
+            query_fragment = self.generate_filter_with_label(
+                form, filter_name,
+                filter_lookup,
+                filter_value
+            )
+
+            current_stack.append(query_fragment)
+            if filter_right_op == 'OR':
+                # Since we found an OR operator, create new group to
+                # hold following AND-ed filters
+                current_stack = []
+                stack.append(current_stack)
+
+        return self.stack_to_Q(stack)
+        
+
+
+class ParsedStringQBuilder(BaseQBuilder):
 
     def __init__(self, q, form_class, raise_on_error=False):
         """
