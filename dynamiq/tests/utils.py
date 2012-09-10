@@ -196,3 +196,27 @@ class FiltersBuilderTests(DynamiqBaseFormsetTests):
         ]
         expected = Q(captain__contains=u"Tabarly") | Q(captain__contains=u"Moitessier")
         self.run_test(data, expected)
+
+    def test_OR_and_AND_can_be_mixed(self):
+        data = [
+            {
+                'filter_name': 'captain',
+                'fulltext_lookup': BoatSearchForm.FILTER_LOOKUPS_FULLTEXT.CONTAINS,
+                'filter_value_fulltext': u'Didier',
+                'filter_right_op': BoatSearchForm.FILTER_RIGHT_OP.AND,
+            },
+            {
+                'filter_name': 'captain',
+                'fulltext_lookup': BoatSearchForm.FILTER_LOOKUPS_FULLTEXT.CONTAINS,
+                'filter_value_fulltext': u'Peyron',
+                'filter_right_op': BoatSearchForm.FILTER_RIGHT_OP.OR,
+            },
+            {
+                'filter_name': 'captain',
+                'fulltext_lookup': BoatSearchForm.FILTER_LOOKUPS_FULLTEXT.CONTAINS,
+                'filter_value_fulltext': u'Moitessier',
+            }
+        ]
+        Q1 = Q(captain__contains=u"Didier") & Q(captain__contains=u"Peyron")
+        expected = Q1 | Q(captain__contains=u"Moitessier")
+        self.run_test(data, expected)
