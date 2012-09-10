@@ -299,7 +299,6 @@ class FormsetQBuilder(BaseQBuilder):
                 stack.append(current_stack)
 
         return self.stack_to_Q(stack)
-        
 
 
 class ParsedStringQBuilder(BaseQBuilder):
