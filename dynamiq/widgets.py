@@ -80,7 +80,7 @@ class MultiAutocompleteWidget(MultiWidget):
         return [None, None]
 
 
-class DynamiqAdminModelSelect(forms.Select):
+class DynamiqModelSelect(forms.Select):
     """
     Render a Model select that take care of the changelist URL.
     """
@@ -88,21 +88,61 @@ class DynamiqAdminModelSelect(forms.Select):
     def __init__(self, *args, **kwargs):
         self.admin_site_name = kwargs.pop('admin_site_name')
         self.changelist_url_getter = kwargs.pop('changelist_url_getter')
-        super(DynamiqAdminModelSelect, self).__init__(*args, **kwargs)
+        super(DynamiqModelSelect, self).__init__(*args, **kwargs)
 
     def build_attrs(self, attrs=None, **kwargs):
-        rval = super(DynamiqAdminModelSelect, self).build_attrs(attrs, **kwargs)
-        rval.update({'class': 'js-update_form_action'})
+        rval = super(DynamiqModelSelect, self).build_attrs(attrs, **kwargs)
+        rval.update({'class': 'js-change_model'})
         return rval
 
-    def render_option(self, selected_choices, option_value, option_label):
+    def _render_option_parts(self, selected_choices, option_value, option_label):
 
         option_value = force_unicode(option_value)
         app_label, classname = model_to_app_and_classname(option_value)
 
-        selected_html = (option_value in selected_choices) and u' selected="selected"' or ''
-        data_action = ' data-actionurl="%s"' % (
-            self.changelist_url_getter.get_url(self.admin_site_name, app_label, classname), )
-        return u'<option value="%s"%s%s>%s</option>' % (
-            escape(option_value), selected_html, data_action,
-            conditional_escape(force_unicode(option_label)))
+        attributes = {
+            'data-actionurl': self.changelist_url_getter.get_url(self.admin_site_name, app_label, classname)
+        }
+        if option_value in selected_choices:
+            attributes['selected'] = 'selected'
+
+        return {
+            'value': escape(option_value),
+            'attributes': attributes,
+            'label': conditional_escape(force_unicode(option_label))
+        }
+
+    def render_option(self, selected_choices, option_value, option_label):
+        parts = self._render_option_parts(selected_choices, option_value, option_label)
+        attr_str = ' '.join([u'%s="%s"' % (key, value) for key, value in parts['attributes'].iteritems()])
+        return u'<option value="%s"%s>%s</option>' % (parts['value'], attr_str, parts['label'])
+
+
+class DynamiqAdvancedModelSelect(DynamiqModelSelect):
+    """
+    In advanced search mode, active/unactive filters according to the model
+    selection.
+    """
+
+    def __init__(self, *args, **kwargs):
+        self.options_form = kwargs.pop('options_form', None)
+        super(DynamiqAdvancedModelSelect, self).__init__(*args, **kwargs)
+
+    def _render_option_parts(self, selected_choices, option_value, option_label):
+        parts = super(DynamiqAdvancedModelSelect, self)._render_option_parts(selected_choices, option_value, option_label)
+
+        if hasattr(self, 'options_form') and hasattr(self.options_form, 'MODEL_OPTIONS') \
+            and hasattr(self.options_form, 'main_form'):
+
+            sort_options = []
+            for option in self.options_form.MODEL_OPTIONS[option_value]['sort']:
+                sort_options.append(getattr(self.options_form.SORT, option))
+            parts['attributes']['data-sort'] = '|'.join(sort_options)
+
+            if hasattr(self.options_form.main_form, 'FILTER_NAME'):
+                filters = []
+                for filtr in self.options_form.MODEL_OPTIONS[option_value]['filters']:
+                    filters.append(getattr(self.options_form.main_form.FILTER_NAME, filtr))
+                parts['attributes']['data-filters'] = '|'.join(filters)
+
+        return parts

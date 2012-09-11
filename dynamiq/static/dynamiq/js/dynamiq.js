@@ -271,17 +271,73 @@ var DynamiqSearchFormHandling = function($) {
         });
     }
 
+
     /**
-     * Bind .js-update_form_action <select>s to make sure they change the form's
-     * action when necessary.
+     * Bind .js-change_model <select>s to make sure they change the form's
+     * action and available filters and sort options when necessary.
      */
     function bind_form(form) {
-        $('.js-update_form_action', form).each(function(idx, item) {
+        $('.js-change_model', form).each(function(idx, item) {
             item.onchange = function(e) {
                 change_dynamic_form_action(this);
+                change_available_filters(this);
+                change_available_sort_options(this);
             }
             change_dynamic_form_action(this);
+            change_available_filters(this);
+            change_available_sort_options(this);
         });
+    }
+
+    /**
+     * Called by change_available_filters and change_available_sort_options to
+     * update available options in a select, based on a list of options found
+     * in a data attribute of the selected model option
+     */
+    function _change_model_relatives(model_select, data_name, relative_class) {
+        var selected_option = $(model_select.options[model_select.selectedIndex]),
+            data_choices = selected_option.data(data_name),
+            all = false, 
+            choices = [],
+            selects = $(model_select).parents('form.search_form').find('select.' + relative_class);
+
+        if (!data_choices) { 
+            all = true;
+        } else {
+            choices = data_choices.split('|');
+        }
+
+        for (var num_select = 0; num_select < selects.length; num_select++) {
+            var select = selects[num_select];
+            for (var num_option = 0; num_option < select.options.length; num_option++) {
+                var option = $(select.options[num_option]),
+                    choice = option.val();
+                if (all || $.inArray(choice, choices) != -1) {
+                    option.removeProp('disabled');
+                } else {
+                    option.prop('disabled', true);
+                }
+            }
+            if (select.options[select.selectedIndex].disabled) {
+                $(select).css({borderColor: 'red'});
+            } else {
+                $(select).css({borderColor: ''});
+            }
+        }
+    }
+
+    /**
+     * Limit filters to display depending on the selected model in elm
+     */
+    function change_available_filters(elm) {
+        _change_model_relatives(elm, 'filters', 'filter_name');
+    }
+
+    /**
+     * Limit sort options to display depending on the selected model in elm
+     */
+    function change_available_sort_options(elm) {
+        _change_model_relatives(elm, 'sort', 'sort');
     }
 
     /**

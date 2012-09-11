@@ -2,7 +2,7 @@
 
 from dynamiq.forms.base import DynamiqOptionsMixin
 from dynamiq.utils import ChangeListUrlGetter
-from dynamiq.widgets import DynamiqAdminModelSelect
+from dynamiq.widgets import DynamiqAdvancedModelSelect
 from . import SeSQLOptionsForm
 
 
@@ -25,10 +25,11 @@ class SeSQLAdminOptionsForm(SeSQLOptionsForm):
         self.admin_site_name = self.main_form.admin_site_name
 
         # Use a widget to manage the admin changelist URL
-        self.fields['model'].widget = DynamiqAdminModelSelect(
+        self.fields['model'].widget = DynamiqAdvancedModelSelect(
                 choices=self._build_models_choices(),
                 admin_site_name=self.admin_site_name,
-                changelist_url_getter=self.changelist_url_getter
+                changelist_url_getter=self.changelist_url_getter,
+                options_form=self
             )
 
     def _build_models_choices(self):

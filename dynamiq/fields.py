@@ -23,7 +23,7 @@ class DynamiqChoiceFieldMixin(ExtendedChoiceField):
     The css_class argument is only for this default widget
     """
 
-    def __init__(self, choices=None, required=False, widget=None, css_class='filter_value'):
+    def __init__(self, choices=None, required=False, widget=None, label=None, css_class='filter_value'):
         if widget is None:
             attrs = {}
             if css_class is not None:
@@ -33,7 +33,8 @@ class DynamiqChoiceFieldMixin(ExtendedChoiceField):
         params = dict(
             required=required,
             extended_choices=choices or Choices(),
-            widget=widget
+            widget=widget,
+            label=label,
             )
 
         return super(DynamiqChoiceFieldMixin, self).__init__(**params)

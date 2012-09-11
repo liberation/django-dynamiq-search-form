@@ -19,6 +19,12 @@ class SeSQLOptionsForm(DynamiqSearchOptionsForm):
     QUERY_PLAN = QUERY_PLAN
     MODEL = ()
     MODEL_INITIAL = None
+    MODEL_OPTIONS = {
+         # MODEL_CHOICES.GROUP: {
+         #     'filters': ('TITLE', ),  # available filters for this model
+         #     'sort': ('RELEVANCE', 'LAST_PUBLISHED', ),  # available sort options for this model
+         # },
+     }
 
     model = CommaSeparatedChoiceField(extended_choices=Choices(), required=True)
     query_plan = ExtendedChoiceField(extended_choices=QUERY_PLAN, required=True, initial=QUERY_PLAN.SHORT, label=u"Mode")

@@ -90,10 +90,11 @@ class DynamiqSearchOptionsForm(forms.Form):
                 initial=15,
                 label=u"Nombre de résultats"
             )
-    sort = ExtendedChoiceField(
-               extended_choices=Choices(),
+    sort = DynamiqChoiceField(
+               choices=Choices(),
                required=True,
-               label=u"Trier par"
+               label=u"Trier par",
+               css_class="sort"
            )
 
     def __init__(self, *args, **kwargs):
@@ -107,7 +108,10 @@ class DynamiqSearchOptionsForm(forms.Form):
 
 
 class DynamiqAdvancedFormset(DynamiqOptionsMixin, BaseFormSet):
-    pass
+
+    @property
+    def FILTER_NAME(self):
+        return self.empty_form.FILTER_NAME
 
 
 class DynamiqAdvancedForm(forms.Form):
