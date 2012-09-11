@@ -92,7 +92,7 @@ class DynamiqSearchOptionsForm(forms.Form):
             )
     sort = DynamiqChoiceField(
                choices=Choices(),
-               required=True,
+               required=False,
                label=u"Trier par",
                css_class="sort"
            )
