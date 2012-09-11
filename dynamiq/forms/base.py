@@ -2,6 +2,7 @@
 
 from django import forms
 from django.forms.formsets import BaseFormSet
+from django.utils.translation import ugettext as _
 
 from extended_choices import Choices
 from extended_choices.fields import ExtendedChoiceField
@@ -88,12 +89,12 @@ class DynamiqSearchOptionsForm(forms.Form):
                 max_value=100,
                 required=True,
                 initial=15,
-                label=u"Nombre de résultats"
+                label=_("Total results")
             )
     sort = DynamiqChoiceField(
                choices=Choices(),
                required=False,
-               label=u"Trier par",
+               label=_("Sort by"),
                css_class="sort"
            )
 
@@ -131,7 +132,7 @@ class DynamiqAdvancedForm(forms.Form):
     FILTER_LOOKUPS_ALIASES = FILTER_LOOKUPS_ALIASES
 
     FILTER_NAME = Choices(
-        ('FULLTEXT', 'fulltext', u'Tout'),
+        ('FULLTEXT', 'fulltext', _('Any')),
     )
     DEFAULT_FILTER_NAME = FILTER_NAME.FULLTEXT
     FILTERS_NAMES_BY_GROUP = {
@@ -337,7 +338,7 @@ class DynamiqAdvancedForm(forms.Form):
         filter_value = cleaned_data.get('filter_value_' + filter_value_receptacle)
 
         if not (filter_name and filter_lookup):
-            raise forms.ValidationError('Il manque des données pour ce critère !')
+            raise forms.ValidationError(_('Some data is missing for this filter!'))
 
         # Overwrite cleaned_data to leave only "final" fields for later use
         cleaned_data = {

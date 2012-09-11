@@ -7,8 +7,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: 0.0.1\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2012-09-02 21:37+0200\n"
-"PO-Revision-Date: 2012-08-28 00:06+0200\n"
+"POT-Creation-Date: 2012-09-11 16:04+0200\n"
+"PO-Revision-Date: 2012-09-11 16:06+0200\n"
 "Last-Translator: Yohan Boniface <yb@enix.org>\n"
 "Language-Team: FR <devweb@liberation.fr>\n"
 "Language: fr\n"
@@ -17,13 +17,29 @@ msgstr ""
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=(n > 1)\n"
 
-#: utils.py:100 forms/constants.py:14
+#: utils.py:68 forms/constants.py:14
 msgid "AND"
 msgstr "ET"
 
-#: utils.py:109 forms/constants.py:15
+#: utils.py:77 forms/constants.py:15
 msgid "OR"
 msgstr "OU"
+
+#: forms/base.py:92
+msgid "Total results"
+msgstr "Nombre de résultats"
+
+#: forms/base.py:97
+msgid "Sort by"
+msgstr "Trier par"
+
+#: forms/base.py:135
+msgid "Any"
+msgstr "Tout"
+
+#: forms/base.py:341
+msgid "Some data is missing for this filter!"
+msgstr "Il manque des données pour ce critère!"
 
 #: forms/constants.py:8
 msgid "yes"
@@ -34,81 +50,82 @@ msgid "no"
 msgstr "non"
 
 #: forms/constants.py:21 forms/constants.py:26 forms/constants.py:31
-#: forms/constants.py:42
+#: forms/constants.py:36 forms/constants.py:47
 msgid "is"
 msgstr "est"
 
 #: forms/constants.py:22 forms/constants.py:27 forms/constants.py:32
+#: forms/constants.py:37
 msgid "is not"
 msgstr "n'est pas"
 
-#: forms/constants.py:33
+#: forms/constants.py:38
 msgid "greather than"
 msgstr "supérieur(e) à"
 
-#: forms/constants.py:34
+#: forms/constants.py:39
 msgid "lower than"
 msgstr "inférieur(e) à"
 
-#: forms/constants.py:35 forms/constants.py:43
+#: forms/constants.py:40 forms/constants.py:48
 msgid "greather than or equal to"
 msgstr "supérieur(e) ou égal(e) à"
 
-#: forms/constants.py:36 forms/constants.py:44
+#: forms/constants.py:41 forms/constants.py:49
 msgid "lower than or equal to"
 msgstr "inférieur(e) ou égal(e) à"
 
-#: forms/constants.py:41
+#: forms/constants.py:46
 msgid "from"
 msgstr "depuis"
 
-#: forms/constants.py:45
+#: forms/constants.py:50
 msgid "between"
 msgstr "entre"
 
-#: forms/constants.py:49
+#: forms/constants.py:54
 msgid "today"
 msgstr "aujourd'hui"
 
-#: forms/constants.py:50
+#: forms/constants.py:55
 msgid "yesterday"
 msgstr "hier"
 
-#: forms/constants.py:51
+#: forms/constants.py:56
 msgid "three days"
 msgstr "trois jours"
 
-#: forms/constants.py:52
+#: forms/constants.py:57
 msgid "one week"
 msgstr "une semaine"
 
-#: forms/constants.py:53
+#: forms/constants.py:58
 msgid "six months"
 msgstr "six mois"
 
-#: forms/constants.py:54
+#: forms/constants.py:59
 msgid "one year"
 msgstr "un an"
 
-#: forms/constants.py:55
+#: forms/constants.py:60
 msgid "two years"
 msgstr "deux ans"
 
-#: forms/constants.py:56
+#: forms/constants.py:61
 msgid "tomorrow"
 msgstr "demain"
 
-#: forms/constants.py:60 forms/haystack/constants.py:13
+#: forms/constants.py:65 forms/haystack/constants.py:13
 #: forms/sesql/constants.py:18
 msgid "contains"
 msgstr "contient"
 
-#: forms/constants.py:61 forms/haystack/constants.py:14
+#: forms/constants.py:66 forms/haystack/constants.py:14
 #: forms/sesql/constants.py:19
 msgid "contains exactly"
 msgstr "contient exactement"
 
-#: forms/constants.py:62 forms/haystack/constants.py:15
+#: forms/constants.py:67 forms/haystack/constants.py:15
 #: forms/sesql/constants.py:20
 msgid "does not contain"
 msgstr "ne contient pas"
