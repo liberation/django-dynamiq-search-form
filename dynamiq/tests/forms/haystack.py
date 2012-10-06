@@ -3,8 +3,8 @@
 from extended_choices import Choices
 
 from dynamiq.forms.haystack import HaystackForm
-from dynamiq.forms.base import DynamiqSearchOptionsForm, DynamiqAdvancedFormset
-from dynamiq.fields import DynamiqStrChoiceField, DynamiqIntChoiceField
+from dynamiq.forms.base import SearchOptionsForm, AdvancedFormset
+from dynamiq.fields import StrChoiceField, IntChoiceField
 
 
 KIND = Choices(
@@ -37,7 +37,7 @@ SORT_CHOICES = Choices(
 )
 
 
-class BoatSearchOptionsForm(DynamiqSearchOptionsForm):
+class BoatSearchOptionsForm(SearchOptionsForm):
 
     SORT = SORT_CHOICES
     SORT_INITIAL = SORT.YEAR
@@ -86,10 +86,10 @@ class BoatSearchForm(HaystackForm):
             'receptacle': 'yes_no'
         },
     }
-    filter_value_kind = DynamiqStrChoiceField(KIND)
-    filter_value_rigging = DynamiqIntChoiceField(RIGGING)
+    filter_value_kind = StrChoiceField(KIND)
+    filter_value_rigging = IntChoiceField(RIGGING)
 
 
-class BoatSearchAdvancedFormset(DynamiqAdvancedFormset):
+class BoatSearchAdvancedFormset(AdvancedFormset):
     options_form_class = BoatSearchOptionsForm
     form = BoatSearchForm

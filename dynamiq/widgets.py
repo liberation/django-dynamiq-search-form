@@ -12,13 +12,13 @@ from ajax_select.fields import AutoCompleteWidget
 from .utils import model_to_app_and_classname
 
 
-class DynamiqAdvancedDynamicSelect(forms.Select):
+class AdvancedDynamicSelect(forms.Select):
     def __init__(self, *args, **kwargs):
-        super(DynamiqAdvancedDynamicSelect, self).__init__(*args, **kwargs)
+        super(AdvancedDynamicSelect, self).__init__(*args, **kwargs)
         self.filter_type = None
 
     def build_attrs(self, attrs=None, **kwargs):
-        rval = super(DynamiqAdvancedDynamicSelect, self).build_attrs(attrs, **kwargs)
+        rval = super(AdvancedDynamicSelect, self).build_attrs(attrs, **kwargs)
         if 'class' in rval:
             rval['class'] += ' dynamic_select'
         else:
@@ -80,7 +80,7 @@ class MultiAutocompleteWidget(MultiWidget):
         return [None, None]
 
 
-class DynamiqModelSelect(forms.Select):
+class ModelSelect(forms.Select):
     """
     Render a Model select that take care of the changelist URL.
     """
@@ -88,10 +88,10 @@ class DynamiqModelSelect(forms.Select):
     def __init__(self, *args, **kwargs):
         self.admin_site_name = kwargs.pop('admin_site_name')
         self.changelist_url_getter = kwargs.pop('changelist_url_getter')
-        super(DynamiqModelSelect, self).__init__(*args, **kwargs)
+        super(ModelSelect, self).__init__(*args, **kwargs)
 
     def build_attrs(self, attrs=None, **kwargs):
-        rval = super(DynamiqModelSelect, self).build_attrs(attrs, **kwargs)
+        rval = super(ModelSelect, self).build_attrs(attrs, **kwargs)
         rval.update({'class': 'js-change_model'})
         return rval
 
@@ -118,7 +118,7 @@ class DynamiqModelSelect(forms.Select):
         return u'<option value="%s"%s>%s</option>' % (parts['value'], attr_str, parts['label'])
 
 
-class DynamiqAdvancedModelSelect(DynamiqModelSelect):
+class AdvancedModelSelect(ModelSelect):
     """
     In advanced search mode, active/unactive filters according to the model
     selection.
@@ -126,10 +126,10 @@ class DynamiqAdvancedModelSelect(DynamiqModelSelect):
 
     def __init__(self, *args, **kwargs):
         self.options_form = kwargs.pop('options_form', None)
-        super(DynamiqAdvancedModelSelect, self).__init__(*args, **kwargs)
+        super(AdvancedModelSelect, self).__init__(*args, **kwargs)
 
     def _render_option_parts(self, selected_choices, option_value, option_label):
-        parts = super(DynamiqAdvancedModelSelect, self)._render_option_parts(selected_choices, option_value, option_label)
+        parts = super(AdvancedModelSelect, self)._render_option_parts(selected_choices, option_value, option_label)
 
         if hasattr(self, 'options_form') and hasattr(self.options_form, 'MODEL_OPTIONS') \
             and hasattr(self.options_form, 'main_form'):

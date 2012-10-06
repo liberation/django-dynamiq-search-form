@@ -1,2 +1,2 @@
 from haystack import HaystackForm
-from base import DynamiqAdvancedFormset
+from base import AdvancedFormset

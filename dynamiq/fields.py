@@ -16,7 +16,7 @@ from ajax_select.fields import AutoCompleteField
 from .widgets import BetweenDateWidget, MultiAutocompleteWidget
 
 
-class DynamiqChoiceFieldMixin(ExtendedChoiceField):
+class BaseChoiceFieldMixin(ExtendedChoiceField):
     """
     An ExtendedChoiceField, with some values by default.
     The default widget, if not defined, is a forms.Select.
@@ -37,12 +37,12 @@ class DynamiqChoiceFieldMixin(ExtendedChoiceField):
             label=label,
             )
 
-        return super(DynamiqChoiceFieldMixin, self).__init__(**params)
+        return super(BaseChoiceFieldMixin, self).__init__(**params)
 
 
-class DynamiqChoiceField(DynamiqChoiceFieldMixin, ExtendedChoiceField):
+class DynamiqChoiceField(BaseChoiceFieldMixin, ExtendedChoiceField):
     """
-    ExtendedChoiceField that also uses DynamiqChoiceFieldMixin. In addition,
+    ExtendedChoiceField that also uses BaseChoiceFieldMixin. In addition,
     if passed a value that looks like a list, return a list (splitting by ",")
     when cleaning it.
     """
@@ -54,19 +54,19 @@ class DynamiqChoiceField(DynamiqChoiceFieldMixin, ExtendedChoiceField):
         return rval
 
 
-class DynamiqIntChoiceField(DynamiqChoiceFieldMixin, ExtendedTypedChoiceField):
+class IntChoiceField(BaseChoiceFieldMixin, ExtendedTypedChoiceField):
     def __init__(self, *args, **kwargs):
-        super(DynamiqIntChoiceField, self).__init__(*args, **kwargs)
+        super(IntChoiceField, self).__init__(*args, **kwargs)
         self.coerce = int
 
 
-class DynamiqStrChoiceField(DynamiqChoiceFieldMixin, ExtendedTypedChoiceField):
+class StrChoiceField(BaseChoiceFieldMixin, ExtendedTypedChoiceField):
     def __init__(self, *args, **kwargs):
-        super(DynamiqStrChoiceField, self).__init__(*args, **kwargs)
+        super(StrChoiceField, self).__init__(*args, **kwargs)
         self.coerce = str
 
 
-class DynamiqBooleanChoiceField(DynamiqChoiceFieldMixin, ExtendedTypedChoiceField):
+class BooleanChoiceField(BaseChoiceFieldMixin, ExtendedTypedChoiceField):
 
     def clean(self, value):
         # It expects an int based ExtendedChoices
@@ -97,7 +97,7 @@ class CommaSeparatedChoiceField(ExtendedChoiceField):
         return rval
 
 
-class DynamiqSearchAutoCompleteField(ExtraWidgetAttrsMixin, MultiValueField):
+class SearchAutoCompleteField(ExtraWidgetAttrsMixin, MultiValueField):
     channel = 'dynamiq_search'
 
     def __init__(self, *args, **kwargs):
@@ -113,7 +113,7 @@ class DynamiqSearchAutoCompleteField(ExtraWidgetAttrsMixin, MultiValueField):
         # and instance it just skips that.
         self.widget = MultiAutocompleteWidget(self.channel)
         self.value_for_display = None
-        super(DynamiqSearchAutoCompleteField, self).__init__(fields, *args, **kwargs)
+        super(SearchAutoCompleteField, self).__init__(fields, *args, **kwargs)
 
     def get_value_display(self):
         return self.value_for_display
@@ -151,7 +151,7 @@ class BetweenDateField(ExtraWidgetAttrsMixin, MultiValueField):
         return data_list
 
 
-class DynamiqAdvancedChoiceField(ExtendedChoiceField):
+class AdvancedChoiceField(ExtendedChoiceField):
 
     def set_widget_determination_options(self, filter_determination_methods, filter_type=None):
         self.widget.filter_type_determination = filter_determination_methods.get('filter_type')

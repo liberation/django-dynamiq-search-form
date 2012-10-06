@@ -305,7 +305,7 @@ class ParsedStringQBuilder(BaseQBuilder):
     def __init__(self, q, form_class, raise_on_error=False):
         """
         `q` is the string to parse
-        `form_class`, the DynamiqAdvancedForm to use
+        `form_class`, the AdvancedForm to use
         `raise_on_error` define if we raise a ValidationError if some form
         is not valid.
         """

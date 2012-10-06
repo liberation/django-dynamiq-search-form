@@ -1,11 +1,11 @@
 # -*- coding: utf-8 -*-
 
 
-from dynamiq.forms.base import DynamiqAdvancedForm
+from dynamiq.forms.base import AdvancedForm
 from .constants import (FILTER_LOOKUPS_FULLTEXT, FILTER_LOOKUPS, FILTER_LOOKUPS_ALIASES)
 
 
-class HaystackForm(DynamiqAdvancedForm):
+class HaystackForm(AdvancedForm):
 
     # Redefine it class level
     FILTER_LOOKUPS_FULLTEXT = FILTER_LOOKUPS_FULLTEXT

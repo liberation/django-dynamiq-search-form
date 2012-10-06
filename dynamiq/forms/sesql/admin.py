@@ -1,12 +1,12 @@
 # -*- coding: utf-8 -*-
 
-from dynamiq.forms.base import DynamiqOptionsMixin
+from dynamiq.forms.base import SearchOptionsMixin
 from dynamiq.utils import ChangeListUrlGetter
-from dynamiq.widgets import DynamiqAdvancedModelSelect
+from dynamiq.widgets import AdvancedModelSelect
 from . import SeSQLOptionsForm
 
 
-class SeSQLAdminSearchOptionsMixin(DynamiqOptionsMixin):
+class SeSQLAdminSearchOptionsMixin(SearchOptionsMixin):
     """
     Options mixin admin_site aware.
     """
@@ -25,7 +25,7 @@ class SeSQLAdminOptionsForm(SeSQLOptionsForm):
         self.admin_site_name = self.main_form.admin_site_name
 
         # Use a widget to manage the admin changelist URL
-        self.fields['model'].widget = DynamiqAdvancedModelSelect(
+        self.fields['model'].widget = AdvancedModelSelect(
                 choices=self._build_models_choices(),
                 admin_site_name=self.admin_site_name,
                 changelist_url_getter=self.changelist_url_getter,

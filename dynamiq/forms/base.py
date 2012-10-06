@@ -8,11 +8,10 @@ from extended_choices import Choices
 from extended_choices.fields import ExtendedChoiceField
 
 
-from dynamiq.fields import (DynamiqAdvancedChoiceField, DynamiqBooleanChoiceField,
-                         DynamiqSearchAutoCompleteField, BetweenDateField,
-                         DynamiqChoiceField, DynamiqIntChoiceField,
-                         PolymorphicDateField)
-from dynamiq.widgets import DynamiqAdvancedDynamicSelect
+from dynamiq.fields import (AdvancedChoiceField, BooleanChoiceField,
+                            SearchAutoCompleteField, BetweenDateField,
+                            DynamiqChoiceField, IntChoiceField, PolymorphicDateField)
+from dynamiq.widgets import AdvancedDynamicSelect
 from .constants import (FILTER_LOOKUPS_STR, FILTER_LOOKUPS_INT,
                         FILTER_LOOKUPS_DATE, FILTER_LOOKUPS,
                         FILTER_RIGHT_OP, FILTER_DATE_RELATIVE,
@@ -20,11 +19,11 @@ from .constants import (FILTER_LOOKUPS_STR, FILTER_LOOKUPS_INT,
                         FILTER_LOOKUPS_YES_NO, FILTER_LOOKUPS_ALIASES)
 
 
-class DynamiqOptionsMixin(object):
+class SearchOptionsMixin(object):
     """
-    Mixin which adds an instance of DynamiqOptionsForm in a .options_form
-    property. To be used with a simple search form (see DynamiqSearchForm) or an
-    advanced search formset (see DynamiqSearchAdvancedFormset), as they share same
+    Mixin which adds an instance of SearchOptionsForm in a .options_form
+    property. To be used with a simple search form (see SearchForm) or an
+    advanced search formset (see SearchAdvancedFormset), as they share same
     search options.
 
     If both simple and advanced search are used in the same page, give one of
@@ -62,7 +61,7 @@ class DynamiqOptionsMixin(object):
             # data according to user's group
             # FIXME add test for that!
             kwargs['initial'], self.initial_options = self.get_initial_data()
-        super(DynamiqOptionsMixin, self).__init__(data, *args, **kwargs)
+        super(SearchOptionsMixin, self).__init__(data, *args, **kwargs)
         prefix = kwargs.get('prefix', None)
         self.options_form = self._options_form(prefix=prefix)
         if self.is_bound and data is None:
@@ -79,10 +78,10 @@ class DynamiqOptionsMixin(object):
         return initial, initial_options
 
     def is_valid(self):
-        return self.options_form.is_valid() and super(DynamiqOptionsMixin, self).is_valid()
+        return self.options_form.is_valid() and super(SearchOptionsMixin, self).is_valid()
 
 
-class DynamiqSearchOptionsForm(forms.Form):
+class SearchOptionsForm(forms.Form):
 
     limit = forms.IntegerField(
                 min_value=1,
@@ -102,20 +101,20 @@ class DynamiqSearchOptionsForm(forms.Form):
         self.main_form = kwargs.pop('main_form')
         self.user = self.main_form.user
 
-        super(DynamiqSearchOptionsForm, self).__init__(*args, **kwargs)
+        super(SearchOptionsForm, self).__init__(*args, **kwargs)
 
         self.fields['sort'].extended_choices = self.SORT
         self.fields['sort'].initial = self.SORT_INITIAL
 
 
-class DynamiqAdvancedFormset(DynamiqOptionsMixin, BaseFormSet):
+class AdvancedFormset(SearchOptionsMixin, BaseFormSet):
 
     @property
     def FILTER_NAME(self):
         return self.empty_form.FILTER_NAME
 
 
-class DynamiqAdvancedForm(forms.Form):
+class AdvancedForm(forms.Form):
     error_css_class = 'errors'
 
     # Lookup filters
@@ -171,9 +170,9 @@ class DynamiqAdvancedForm(forms.Form):
     )
 
     # filter name field
-    filter_name = DynamiqAdvancedChoiceField(
+    filter_name = AdvancedChoiceField(
         extended_choices=FILTER_NAME,
-        widget=DynamiqAdvancedDynamicSelect(attrs={'class': 'filter_name'})
+        widget=AdvancedDynamicSelect(attrs={'class': 'filter_name'})
     )
 
     # Form lookup fields
@@ -202,10 +201,10 @@ class DynamiqAdvancedForm(forms.Form):
         extended_choices=FILTER_LOOKUPS_YES_NO,
         widget=forms.Select(attrs={'class': 'filter_lookup'})
     )
-    date_lookup = DynamiqAdvancedChoiceField(
+    date_lookup = AdvancedChoiceField(
         required=False,
         extended_choices=FILTER_LOOKUPS_DATE,
-        widget=DynamiqAdvancedDynamicSelect(attrs={'class': 'filter_lookup'})
+        widget=AdvancedDynamicSelect(attrs={'class': 'filter_lookup'})
     )
 
     # Value receptacle fields
@@ -213,11 +212,11 @@ class DynamiqAdvancedForm(forms.Form):
     filter_value_str = forms.CharField(required=False, widget=forms.TextInput(attrs={'class': 'filter_value'}))
     filter_value_date = PolymorphicDateField(required=False, widget=forms.DateInput(attrs={'class': 'filter_value'}))
     filter_value_date_between = BetweenDateField(required=False, widgets_attrs={'class': 'filter_value filter_value_multiple'})
-    filter_value_date_relative = DynamiqIntChoiceField(FILTER_DATE_RELATIVE)
+    filter_value_date_relative = IntChoiceField(FILTER_DATE_RELATIVE)
     filter_value_int = forms.IntegerField(required=False, widget=forms.TextInput(attrs={'class': 'filter_value'}))
     filter_value_id = forms.IntegerField(required=False, widget=forms.TextInput(attrs={'class': 'filter_value'}))
-    filter_value_autocomplete = DynamiqSearchAutoCompleteField(required=False, widgets_attrs={'class': 'filter_value autocompleted'})
-    filter_value_yes_no = DynamiqBooleanChoiceField(YES_NO)
+    filter_value_autocomplete = SearchAutoCompleteField(required=False, widgets_attrs={'class': 'filter_value autocompleted'})
+    filter_value_yes_no = BooleanChoiceField(YES_NO)
 
     # AND / OR
     filter_right_op = DynamiqChoiceField(FILTER_RIGHT_OP, css_class='right_op')
@@ -230,7 +229,7 @@ class DynamiqAdvancedForm(forms.Form):
 
     def __init__(self, *args, **kwargs):
         self.user = kwargs.pop('user', None)
-        super(DynamiqAdvancedForm, self).__init__(*args, **kwargs)
+        super(AdvancedForm, self).__init__(*args, **kwargs)
 
         # Choices of field .filter_name depends on user's group.
         # Build the choices dynamically and alter the field accordingly.
