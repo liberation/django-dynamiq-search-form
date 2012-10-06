@@ -10,7 +10,8 @@ from extended_choices.fields import ExtendedChoiceField
 
 from dynamiq.fields import (AdvancedChoiceField, BooleanChoiceField,
                             SearchAutoCompleteField, BetweenDateField,
-                            DynamiqChoiceField, IntChoiceField, PolymorphicDateField)
+                            DynamiqChoiceField, IntChoiceField, PolymorphicDateField,
+                            CommaSeparatedChoiceField)
 from dynamiq.widgets import AdvancedDynamicSelect
 from .constants import (FILTER_LOOKUPS_STR, FILTER_LOOKUPS_INT,
                         FILTER_LOOKUPS_DATE, FILTER_LOOKUPS,
@@ -105,6 +106,29 @@ class SearchOptionsForm(forms.Form):
 
         self.fields['sort'].extended_choices = self.SORT
         self.fields['sort'].initial = self.SORT_INITIAL
+
+
+class ModelSearchOptionsForm(SearchOptionsForm):
+    """
+    Model aware options form.
+    """
+
+    MODEL = ()
+    MODEL_INITIAL = None
+    MODEL_OPTIONS = {
+         # MODEL_CHOICES.GROUP: {
+         #     'filters': ('TITLE', ),  # available filters for this model
+         #     'sort': ('RELEVANCE', 'LAST_PUBLISHED', ),  # available sort options for this model
+         # },
+    }
+
+    model = CommaSeparatedChoiceField(extended_choices=Choices(), required=True)
+
+    def __init__(self, *args, **kwargs):
+        super(ModelSearchOptionsForm, self).__init__(*args, **kwargs)
+
+        self.fields['model'].extended_choices = self.MODEL
+        self.fields['model'].initial = self.MODEL_INITIAL
 
 
 class AdvancedFormset(SearchOptionsMixin, BaseFormSet):
