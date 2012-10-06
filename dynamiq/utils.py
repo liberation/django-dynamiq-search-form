@@ -1,6 +1,5 @@
 # -*- coding: utf-8 -*-
 
-import shlex
 import re
 
 from datetime import date, timedelta
