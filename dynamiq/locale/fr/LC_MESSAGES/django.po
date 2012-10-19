@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: 0.0.1\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2012-09-11 16:04+0200\n"
+"POT-Creation-Date: 2012-10-19 19:53+0200\n"
 "PO-Revision-Date: 2012-09-11 16:06+0200\n"
 "Last-Translator: Yohan Boniface <yb@enix.org>\n"
 "Language-Team: FR <devweb@liberation.fr>\n"
@@ -17,11 +17,11 @@ msgstr ""
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=(n > 1)\n"
 
-#: utils.py:68 forms/constants.py:14
+#: utils.py:67 forms/constants.py:14
 msgid "AND"
 msgstr "ET"
 
-#: utils.py:77 forms/constants.py:15
+#: utils.py:76 forms/constants.py:15
 msgid "OR"
 msgstr "OU"
 
@@ -33,11 +33,11 @@ msgstr "Nombre de résultats"
 msgid "Sort by"
 msgstr "Trier par"
 
-#: forms/base.py:135
+#: forms/base.py:158
 msgid "Any"
 msgstr "Tout"
 
-#: forms/base.py:341
+#: forms/base.py:364
 msgid "Some data is missing for this filter!"
 msgstr "Il manque des données pour ce critère!"
 
@@ -167,7 +167,3 @@ msgstr "Options"
 #: templates/dynamiq/advanced_formset.html:60
 msgid "show"
 msgstr "afficher"
-
-#: templates/dynamiq/advanced_formset.html:68
-msgid "Give me the simple search form!"
-msgstr "Basculer sur la recherche simple!"
