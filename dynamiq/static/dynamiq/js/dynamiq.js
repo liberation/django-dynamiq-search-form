@@ -29,15 +29,15 @@ var DynamiqSearchFormHandling = function($) {
         var query_filter = elm;
         var parentElm = $(query_filter).parents('.query_fragment');
         var selected_option = $(elm.options[elm.selectedIndex], parentElm);
-        var filter_type = selected_option.data('filtertype')
+        var filter_type = selected_option.data('filtertype');
         if (filter_type) {
             // If a new filter type needs to be shown, find it, show it, and hide the rest
             var lookup_elm = $('#id_' + parentElm[0].id + '-' + filter_type + '_lookup');
-            hide_filter_elm($('.filter_lookup', parentElm).not(lookup_elm))
+            hide_filter_elm($('.filter_lookup', parentElm).not(lookup_elm));
             show_filter_elm(lookup_elm);
             // Since we changed the lookup, make sure its initialization method
             // is called - init is not done while the widget is hidden
-            // FIXME: a cleaner way to do it would be to just trigger the 
+            // FIXME: a cleaner way to do it would be to just trigger the
             // "onchange" event on the correct element.
             change_dynamic_value_receptacle(lookup_elm[0]);
         }
@@ -78,7 +78,7 @@ var DynamiqSearchFormHandling = function($) {
                         select: function(event, ui) {
                             autocomplete_input_elm.val(ui.item.label);
                             if (ui.item.pk === 'None') {
-                                // if the autocomplete result is not returning 
+                                // if the autocomplete result is not returning
                                 // a pk, then simply use the .value
                                 autocomplete_result_elm.val(ui.item.value);
                             } else {
@@ -90,7 +90,7 @@ var DynamiqSearchFormHandling = function($) {
                     }).autocompletehtml();
                 }
             }
-            hide_filter_elm($('.filter_value', parentElm).not(value_elm))
+            hide_filter_elm($('.filter_value', parentElm).not(value_elm));
             show_filter_elm(value_elm);
             if (combine) {
                 combine.show().removeClass('js-hidden');
@@ -111,9 +111,9 @@ var DynamiqSearchFormHandling = function($) {
     }
 
     /**
-     * Method handling operator changing. It adds new forms to the formset if 
+     * Method handling operator changing. It adds new forms to the formset if
      * necessary and also make sure to switch the previous form operator if
-     * needed (last form should never have a selected operator, since 
+     * needed (last form should never have a selected operator, since
      * it's "alone")
      */
     function change_operator(elm) {
@@ -167,7 +167,7 @@ var DynamiqSearchFormHandling = function($) {
         elm.append('<li><a href="javascript:void(0)" class="delete-form"></a></li>');
         var deleteButton = $('a.delete-form', elm);
         deleteButton.click(function(e) {
-            var fragment = $(this).parents(".query_fragment")
+            var fragment = $(this).parents(".query_fragment");
             fragment.formset('deleteForm', fragment);
         });
     }
@@ -178,7 +178,7 @@ var DynamiqSearchFormHandling = function($) {
     function modify_filter(row, data) {
         // Select given filter_name and trigger change on filter_name's <select>
         // to make other dynamic stuff (lookup, value_receptacle) change as well
-        var filter_name = data.filter_name
+        var filter_name = data.filter_name;
         row.find('.filter_name').val(filter_name).change();
         // If given, select lookup corresponding to filtername and trigger
         // change on it
@@ -190,7 +190,7 @@ var DynamiqSearchFormHandling = function($) {
         if (data.filter_value) {
             row.find('.filter_value:visible').val(data.filter_value);
         }
-        // If given, select right operator and trigger change (in order to 
+        // If given, select right operator and trigger change (in order to
         // build next filter)
         if (data.right_op) {
             row.find('.right_op').val(data.right_op).change();
@@ -230,7 +230,7 @@ var DynamiqSearchFormHandling = function($) {
             var data = $(this).data('filterbuilder');
             apply_filters_builder(data);
             return false;
-        })
+        });
     }
 
     /**
@@ -242,7 +242,7 @@ var DynamiqSearchFormHandling = function($) {
         $('.right_op', fragment).each(function(idx, item) {
             item.onchange = function(e) {
                 change_operator(this);
-            }
+            };
             change_operator(this);
         });
 
@@ -261,7 +261,7 @@ var DynamiqSearchFormHandling = function($) {
                 // the lookup can change the value receptacle.
                 change_dynamic_value_receptacle(this);
                 change_dynamic_lookup(this);
-            }
+            };
             if (!$(item).hasClass('js-hidden')) {
                 // We need to check item visibility to make sure inactive selects
                 // don't change the lookup or value receptacle.
@@ -282,7 +282,7 @@ var DynamiqSearchFormHandling = function($) {
                 change_dynamic_form_action(this);
                 change_available_filters(this);
                 change_available_sort_options(this);
-            }
+            };
             change_dynamic_form_action(this);
             change_available_filters(this);
             change_available_sort_options(this);
@@ -297,11 +297,11 @@ var DynamiqSearchFormHandling = function($) {
     function _change_model_relatives(model_select, data_name, relative_class) {
         var selected_option = $(model_select.options[model_select.selectedIndex]),
             data_choices = selected_option.data(data_name),
-            all = false, 
+            all = false,
             choices = [],
             selects = $(model_select).parents('form.search_form').find('select.' + relative_class);
 
-        if (!data_choices) { 
+        if (!data_choices) {
             all = true;
         } else {
             choices = data_choices.split('|');
@@ -414,12 +414,12 @@ var DynamiqSearchFormHandling = function($) {
 
         return {
             // expose public methods here if necessary
-        }
+        };
     }
 
     // call init when calling the function, returning public methods
     return init();
-}
+};
 
 jQuery(document).ready(function($) {
     // init search form handling object - it binds dynamic forms and stuff like that
