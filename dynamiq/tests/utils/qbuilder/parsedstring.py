@@ -41,6 +41,7 @@ class StringParsedQBuilderTests(BaseStringParsedQBuilderTests):
         do("-Le PEN Marine", ['-Le PEN Marine'])
         do('-"Le PEN Marine"', ['-"Le PEN Marine"'])
         do("country:FR", ['country', ':', 'FR'])
+        do("group:Greens/EFA", ['group', ':', 'Greens/EFA'])
 
     def test_default_filter_is_used_if_not_given(self):
         q = "Spray"
