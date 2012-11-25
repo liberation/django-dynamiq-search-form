@@ -305,7 +305,7 @@ var DynamiqSearchFormHandling = function($) {
                     qs += el.value + " ";
                 }
             }
-            window.location="?q=" + qs;
+            window.location = form.action + "?q=" + qs;
         };
         $(form).on('submit', fn);
     }
