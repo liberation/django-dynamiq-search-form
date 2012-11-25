@@ -287,6 +287,27 @@ var DynamiqSearchFormHandling = function($) {
             change_available_filters(this);
             change_available_sort_options(this);
         });
+
+        serialize_to_string(form);
+    }
+
+    /*
+    * We want human readable URLs
+    */
+    function serialize_to_string (form) {
+        var fn = function (e) {
+            e.preventDefault();
+            e.stopPropagation();
+            var qs = "";
+            for (var i = 0, l = form.elements.length; i < l; i++) {
+                var el = form.elements[i];
+                if ($(el).is(':visible') && el.type != "submit" && el.value) {
+                    qs += el.value + " ";
+                }
+            }
+            window.location="?q=" + qs;
+        };
+        $(form).on('submit', fn);
     }
 
     /**
@@ -344,6 +365,7 @@ var DynamiqSearchFormHandling = function($) {
      * Init function (doh!)
      */
     function init() {
+
         // Base initialization shared by simple and advanced form
         $('.search_form').each(function(idx, item) {
             bind_form(item);
