@@ -299,13 +299,28 @@ var DynamiqSearchFormHandling = function($) {
             e.preventDefault();
             e.stopPropagation();
             var qs = "";
+            var options = Array();
             for (var i = 0, l = form.elements.length; i < l; i++) {
                 var el = form.elements[i];
-                if ($(el).is(':visible') && el.type != "submit" && el.value) {
-                    qs += el.value + " ";
+                if (el.type == "submit" || !el.value) {
+                    continue;
+                }
+                if ($(el).is('[name^="form-"]')) {
+                    if ($(el).is(':visible')) {
+                        qs += el.value + " ";
+                    }
+                }
+                else {
+                    // It's an option element
+                    options.push("&" + encodeURI(el.name + "=" + el.value));
                 }
             }
-            window.location = form.action + "?q=" + qs;
+            var url = form.action + "?q=" + qs;
+            var options_string = options.join('');
+            if (options_string) {
+                url += options_string;
+            }
+            window.location = url;
         };
         $(form).on('submit', fn);
     }
