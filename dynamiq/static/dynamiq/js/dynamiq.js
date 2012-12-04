@@ -287,6 +287,19 @@ var DynamiqSearchFormHandling = function($) {
             change_available_filters(this);
             change_available_sort_options(this);
         });
+        $(form).on('submit', function (e){
+            // Disable useless elements before submiting to get a smaller URL
+            vacuum_form(form);
+        });
+    }
+
+
+    /**
+     * Disable useless elements.
+     */
+    function vacuum_form (form) {
+        // Django new form template
+        $(form).find('#form-empty select, #form-empty input').attr('disabled', true);
     }
 
     /**
